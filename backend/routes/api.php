@@ -2,11 +2,13 @@
 
 use App\Http\Controllers\AppearanceController;
 use App\Http\Controllers\ContentController;
+use App\Http\Controllers\SitePageController;
 use App\Http\Controllers\WorkspaceController;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->middleware('throttle:120,1')->group(function () {
+    Route::get('/pages/{slug}', [SitePageController::class, 'show']);
     Route::get('/appearance', [AppearanceController::class, 'show']);
     Route::get('/tools', [WorkspaceController::class, 'tools']);
     Route::get('/terms', [WorkspaceController::class, 'terms']);

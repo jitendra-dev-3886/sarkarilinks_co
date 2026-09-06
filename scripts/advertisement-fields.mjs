@@ -3,6 +3,8 @@ export function suggestFields(text) {
   const lines = text.split(/\r?\n/).map(line => line.trim()).filter(Boolean);
   const headline = lines.slice(0, 8).join('\n');
   const patterns = [
+    ['admissions', /admissions?|प्रवेश\s*(?:प्रक्रिया|आवेदन|सूचना)/iu],
+    ['certificate-verification', /certificate\s*verification|प्रमाण\s*पत्र\s*सत्यापन/iu],
     ['admit-cards', /admit\s*card|hall\s*ticket|प्रवेश\s*पत्र/iu],
     ['answer-keys', /answer\s*key|उत्तर\s*कुंजी/iu],
     ['results', /(?:final|exam|examination|recruitment)\s*result|merit\s*list|परिणाम|परीक्षाफल/iu],

@@ -4,11 +4,11 @@ The administrator can publish five coordinated designs. Ocean remains the defaul
 
 | Design | Appearance |
 | --- | --- |
-| Ocean | Blue/teal, light backgrounds, balanced cards and a split introduction |
-| Forest | Mint/green, spacious sections and two-column cards |
-| Studio | Indigo, centered introduction and a horizontal tools panel |
-| Editorial | Warm cream, serif headings and notice-list layouts |
-| Focus | Navy, restrained borders and compact sections |
+| Ocean | Deep navy/teal introduction, light notice cards and direct task shortcuts |
+| Forest | Deep green/mint introduction, spacious sections and two-column cards |
+| Studio | Dark indigo/lavender introduction and direct task shortcuts |
+| Editorial | Dark brown/peach introduction, warm cream, serif headings and notice-list layouts |
+| Focus | Deep navy/soft lime introduction, restrained borders and compact sections |
 
 ## Change the design
 
@@ -42,3 +42,50 @@ These features reduce repeat navigation. Retention improvements have not been me
 `GET /api/v1/appearance` returns `{data: {theme, text_size, version}}`. Authenticated `GET /api/v1/admin/appearance` reads the management state; `PUT` accepts those three fields with the current version and requires the session CSRF token. Only the five theme names and `standard|large` sizes are accepted. A stale version returns 409.
 
 Backend tests cover authorization, validation, audit records, concurrent updates and initial HTML settings. A registration regression check ensures public browsing cannot consume account-creation attempts; registration, password changes, media submissions and advertisement submissions have separate rate-limit buckets. Browser tests preview and publish all five designs, check widths of 1440/390/320 px, larger reading size and 200% text scaling, and verify recent-tool privacy and member shortcuts. Run `node scripts/test-browser.mjs --built` after `npm.cmd run build --prefix frontend`. Tests use an isolated database and do not change the working site's design.
+
+
+## Five structural homepage layouts
+
+Administrator > Homepage appearance > choose a design > Preview homepage > Apply design to website. Each selection saves a complete layout and matching palette using the existing audited MySQL setting; previews remain administrator-only.
+
+| Design | Structure | Intended use |
+| --- | --- | --- |
+| Ocean | Split search introduction and task panel, balanced cards | General-purpose starting point |
+| Forest | Job workspace with exam-update sidebar on wide screens | Compare opportunities |
+| Studio | Centered search, task tiles, separate tool cards | Search and document preparation |
+| Editorial | Compact masthead, job rows, newspaper-style notice columns | Regular notice readers |
+| Focus | Narrow page, compact shortcuts, stacked updates | Simple sequential scanning |
+
+Small screens stack sections in document order. All choices retain search, saved-job actions, recent tools, closing-soon filtering, notice refresh and language selection. No automatic layout rotation: returning visitors keep a familiar navigation. Layout and color are paired selections, not independent controls.
+
+Design rationale: [NN/g homepage guidance](https://www.nngroup.com/articles/top-ten-guidelines-for-homepage-usability/) supports clear primary tasks, visible search and real content; [W3C consistent navigation](https://www.w3.org/WAI/WCAG21/Understanding/consistent-navigation.html) supports stable ordering. These are established guidelines consulted for this update, not claims of a new study. Returning visits require fresh useful notices; compare repeat-visitor rate and successful search/tool use before claiming an improvement. No analytics tracker was added.
+
+
+## Inner-page color consistency
+
+The selected design also supplies the dark header palette for listings/search, the tool directory and tool detail pages, member sign-in, the member dashboard and administration. Cards, icons, filters, focus outlines and reading-page accents use the same shared theme tokens. Content and form surfaces remain light for reading. Status/error colors retain their meaning; printable resume templates retain their own document styling. No separate inner-page setting is required.
+
+
+## Sixth structure: Classic notice board
+
+In Admin > Homepage appearance, choose any color theme, then set **Homepage structure** to **06 / Classic notice board**. Preview and apply as usual. Select **Use selected theme layout** to restore the original five structures. The classic structure is independent of color: header/footer logo and inner-page colors follow the selected theme.
+
+The compact masthead and category shortcuts lead to three desktop columns: Latest jobs, Results and Admit cards, followed by Admissions, Answer keys, Syllabus, Certificate verification, application tools and organization links. Each notice column fetches up to ten published notices. Language, refresh, closing-soon jobs, bookmarks and recent tools remain available. Empty categories are labelled honestly. On mobile, columns follow their source order.
+
+Structure references reviewed: https://sarkariresult.com.cm/ , https://rojgarforum.com/ and https://sarkarilink.com/ . Their branding, claims, job listings, ads and assets are not imported.
+
+Deployment: apply `2026_09_06_000007_add_home_layout_to_appearance` before serving the updated app. This additive migration has been applied to local MySQL; existing selections retain `home_layout=theme`. Layout updates use the same administrator-only permissions, optimistic version check and audit log as color updates.
+
+
+## Hot jobs and latest updates
+
+Every homepage structure includes a latest-updates ticker (eight newest published notices in the chosen locale) and up to four hot-job links, selected from the twelve newest published jobs excluding past closing dates in India time. Jobs without a closing date link to the notice for confirmation. Hot jobs is a recent-notice shortlist, not a popularity ranking or manual promotion setting. Classic language selection also updates these sections.
+
+The ticker has pause/resume controls, pauses on hover or keyboard focus, pauses on touch, and disables automatic movement when reduced motion is requested. Links remain horizontally scrollable. Empty and failed requests have explicit messages; no sample notices are published to the live database.
+
+
+## Optional Classic banner
+
+With Homepage structure set to Classic notice board, the **Classic homepage banner** selector offers **Search banner** or **Quick start banner**. Quick start replaces only the top search introduction with four task cards: jobs, results, admit cards and saved jobs, plus a search-page link. Preview and apply use the existing administrator-only workflow. The default is unchanged; switching back restores the search block. No database migration is needed for this option.
+
+Quick start follows the selected theme structurally: Ocean split cards, Forest vertical task list, Studio centered tiles, Editorial bulletin rows, and Focus compact buttons. The four destinations remain consistent. This changes only the optional banner.

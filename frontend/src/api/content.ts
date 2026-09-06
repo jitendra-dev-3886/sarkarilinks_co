@@ -4,6 +4,8 @@ export const categories = [
   ['admit-cards', 'Admit cards', 'Get ready for exam day'],
   ['answer-keys', 'Answer keys', 'Review official answers'],
   ['syllabus', 'Syllabus', 'Plan your preparation'],
+  ['admissions', 'Admissions', 'Find admission notices and application dates'],
+  ['certificate-verification', 'Certificate Verification', 'Find official verification notices and instructions'],
   ['schemes', 'Government schemes', 'Explore citizen benefits'],
 ] as const;
 

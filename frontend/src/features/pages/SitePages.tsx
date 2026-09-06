@@ -1,0 +1,14 @@
+import { useQuery } from '@tanstack/react-query';
+import { Link } from 'react-router-dom';
+import { categories, getJson } from '../../api/content';
+
+export const informationLinks = [['about-us', 'About Us'], ['privacy-policy', 'Privacy Policy'], ['terms-of-use', 'Terms of Use'], ['disclaimer', 'Disclaimer'], ['contact-us', 'Contact Us'], ['faq', 'FAQ'], ['sitemap', 'Sitemap']] as const;
+export const organizations = ['UPSC', 'SSC', 'IBPS', 'Railway RRB', 'UPSSSC', 'BPSC'];
+export interface InformationPage { title: string; description: string; review_required?: boolean; sections: { heading: string; text: string }[]; support_email?: string | null; }
+export default function SitePage({ slug }: { slug: string }) {
+  const query = useQuery({ queryKey: ['site-page', slug], queryFn: () => getJson<{ data: InformationPage }>(`/pages/${slug}`) });
+  if (query.isPending) return <p role="status">Loading page…</p>;
+  if (query.error || !query.data) return <section role="alert"><h1>Unable to load this page</h1><button className="secondary" onClick={() => void query.refetch()}>Try again</button></section>;
+  const page = query.data.data;
+  return <article className="panel information-page"><Link to="/">← Home</Link><h1>{page.title}</h1><p className="lead">{page.description}</p>{page.review_required && <p className="import-notice">Draft: awaiting site-operator review.</p>}{page.sections.map((section, index) => slug === 'faq' ? <details key={index}><summary>{section.heading}</summary><p>{section.text}</p></details> : <section key={index}><h2>{section.heading}</h2><p>{section.text}</p></section>)}{page.support_email && <a className="button" href={`mailto:${page.support_email}`}>Email support</a>}{slug === 'sitemap' && <div className="site-directory"><section><h2>Updates</h2>{categories.map(([type, title]) => <Link key={type} to={`/${type}`}>{title}</Link>)}</section><section><h2>Organizations</h2>{organizations.map(name => <Link key={name} to={`/search?q=${encodeURIComponent(name)}`}>{name}</Link>)}</section><section><h2>Information</h2>{informationLinks.map(([path, title]) => <Link key={path} to={`/${path}`}>{title}</Link>)}</section><section><h2>Tools and account</h2><Link to="/tools">All tools</Link><Link to="/tools/resume-builder">Resume builder</Link><Link to="/account">My dashboard</Link><a href="/sitemap.xml">XML sitemap for search engines</a></section></div>}</article>;
+}

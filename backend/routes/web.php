@@ -8,6 +8,7 @@ use App\Http\Controllers\MediaController;
 use App\Http\Controllers\MemberController;
 use App\Http\Controllers\SeoController;
 use App\Http\Controllers\SessionController;
+use App\Http\Controllers\SitePageController;
 use App\Http\Controllers\WorkspaceController;
 use App\Http\Middleware\PrivateResponse;
 use Illuminate\Support\Facades\Route;
@@ -39,6 +40,8 @@ Route::prefix('api/v1')->middleware([PrivateResponse::class, 'throttle:browser']
         Route::delete('/resume', [MemberController::class, 'deleteResume']);
     });
     Route::prefix('admin')->middleware(['auth', 'can:cms.access'])->group(function () {
+        Route::get('/site-information', [SitePageController::class, 'manage'])->middleware('can:settings.manage');
+        Route::put('/site-information', [SitePageController::class, 'update'])->middleware('can:settings.manage');
         Route::get('/appearance', [AppearanceController::class, 'manage'])->middleware('can:settings.manage');
         Route::put('/appearance', [AppearanceController::class, 'update'])->middleware('can:settings.manage');
         Route::get('/tools', [WorkspaceController::class, 'manageTools'])->middleware('can:tools.manage');

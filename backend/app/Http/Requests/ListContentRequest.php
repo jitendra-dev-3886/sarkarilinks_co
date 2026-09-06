@@ -16,7 +16,7 @@ class ListContentRequest extends FormRequest
     {
         return [
             'q' => ['nullable', 'string', 'max:150'],
-            'type' => ['nullable', Rule::in(['jobs', 'results', 'admit-cards', 'answer-keys', 'syllabus', 'schemes'])],
+            'type' => ['nullable', Rule::in(['jobs', 'results', 'admit-cards', 'answer-keys', 'syllabus', 'schemes', 'admissions', 'certificate-verification'])],
             'locale' => ['sometimes', Rule::in(['en', 'hi'])],
             'sort' => ['sometimes', Rule::in(['newest', 'closing-soon'])],
             'page' => ['sometimes', 'integer', 'min:1', 'max:10000'],

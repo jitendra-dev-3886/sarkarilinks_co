@@ -15,7 +15,7 @@ class SaveContentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'type' => ['required', Rule::in(['jobs', 'results', 'admit-cards', 'answer-keys', 'syllabus', 'schemes'])],
+            'type' => ['required', Rule::in(['jobs', 'results', 'admit-cards', 'answer-keys', 'syllabus', 'schemes', 'admissions', 'certificate-verification'])],
             'locale' => ['required', Rule::in(['en', 'hi'])],
             'slug' => ['required', 'string', 'max:180', 'regex:/^[a-z0-9]+(?:-[a-z0-9]+)*$/', Rule::unique('contents')->where('type', $this->input('type'))->where('locale', $this->input('locale'))->ignore($this->route('content')?->id)],
             'title' => ['required', 'string', 'max:255'],

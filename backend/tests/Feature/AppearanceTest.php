@@ -61,4 +61,19 @@ class AppearanceTest extends TestCase
         $this->get('/?theme-preview=focus&text-preview=large')->assertOk()->assertSee('data-theme="ocean" data-text-size="standard"', false);
         $this->getJson('/api/v1/appearance')->assertJsonPath('data.theme', 'ocean')->assertJsonPath('data.version', 1);
     }
+
+    public function test_classic_layout_is_saved_independently_of_color_and_validated(): void
+    {
+        $this->actingAs($this->user('administrator'));
+        $this->putJson('/api/v1/admin/appearance', ['theme' => 'forest', 'home_layout' => 'classic', 'text_size' => 'standard', 'version' => 1])
+            ->assertOk()->assertJsonPath('data.home_layout', 'classic')->assertJsonPath('data.theme', 'forest');
+        $this->get('/')->assertOk()->assertSee('data-home-layout="classic"', false);
+        $this->putJson('/api/v1/admin/appearance', ['theme' => 'ocean', 'home_layout' => 'invalid', 'text_size' => 'standard', 'version' => 2])->assertUnprocessable();
+        // Older clients may update color without resetting the saved structure.
+        $this->putJson('/api/v1/admin/appearance', ['theme' => 'studio', 'text_size' => 'standard', 'version' => 2])
+            ->assertOk()->assertJsonPath('data.home_layout', 'classic');
+        $this->putJson('/api/v1/admin/appearance', ['theme' => 'studio', 'home_layout' => 'classic-quick', 'text_size' => 'standard', 'version' => 3])
+            ->assertOk()->assertJsonPath('data.home_layout', 'classic-quick');
+        $this->get('/')->assertOk()->assertSee('data-home-layout="classic-quick"', false);
+    }
 }

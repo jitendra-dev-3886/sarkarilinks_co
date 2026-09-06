@@ -15,7 +15,7 @@ class AppearanceController extends Controller
     {
         $record = DB::table('portal_appearance')->where('id', 1)->first();
 
-        return ['theme' => $record->theme, 'text_size' => $record->text_size, 'version' => $record->version];
+        return ['home_layout' => $record->home_layout, 'theme' => $record->theme, 'text_size' => $record->text_size, 'version' => $record->version];
     }
 
     public function show()
@@ -33,13 +33,13 @@ class AppearanceController extends Controller
     public function update(Request $request)
     {
         $this->requireAdministrator($request);
-        $input = $request->validate(['theme' => ['required', Rule::in(self::THEMES)], 'text_size' => ['required', Rule::in(['standard', 'large'])], 'version' => ['required', 'integer', 'min:1']]);
+        $input = $request->validate(['home_layout' => ['sometimes', Rule::in(['theme', 'classic', 'classic-quick'])], 'theme' => ['required', Rule::in(self::THEMES)], 'text_size' => ['required', Rule::in(['standard', 'large'])], 'version' => ['required', 'integer', 'min:1']]);
         DB::transaction(function () use ($input, $request) {
             $before = DB::table('portal_appearance')->where('id', 1)->lockForUpdate()->first();
             abort_unless((int) $before->version === (int) $input['version'], 409, 'Another administrator changed the design. Reload the saved settings before applying your selection.');
-            $after = ['theme' => $input['theme'], 'text_size' => $input['text_size'], 'version' => $before->version + 1];
+            $after = ['home_layout' => $input['home_layout'] ?? $before->home_layout, 'theme' => $input['theme'], 'text_size' => $input['text_size'], 'version' => $before->version + 1];
             DB::table('portal_appearance')->where('id', 1)->update([...$after, 'updated_at' => now()]);
-            Audit::record($request->user()->id, 'appearance.updated', 'portal', 1, ['theme' => $before->theme, 'text_size' => $before->text_size, 'version' => $before->version], $after);
+            Audit::record($request->user()->id, 'appearance.updated', 'portal', 1, ['home_layout' => $before->home_layout, 'theme' => $before->theme, 'text_size' => $before->text_size, 'version' => $before->version], $after);
         });
 
         return $this->show();

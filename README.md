@@ -1,10 +1,18 @@
 # SarkariLinks
 
+Staff guides: [Simple workflow](docs/quick-workflow.md) · [Administrator manual](docs/admin-user-manual.md) · [Release notes — 6 September 2026](docs/release-notes-2026-09-06.md).
+
 React + TypeScript public portal and Laravel 13 API, based on `SarkariLinks_Technical_SRS_React_Laravel_Docker.docx`.
 
 **Status: modern public portal, member accounts and job preferences/bookmarks, ten tools including local AI/OCR and a résumé builder, plus tested staff RBAC/CMS and advertisement extraction. Full SRS and production acceptance remain incomplete.** Start with the [member/tools setup and test guide](docs/member-tools.md), [advertisement import guide](docs/advertisement-import.md) and [SRS role audit](docs/srs-review-2026-09-06.md).
 
 The [homepage appearance guide](docs/appearance.md) explains the five administrator-selectable designs, reading sizes and returning-visitor shortcuts.
+
+The [homepage reference review and growth plan](docs/homepage-growth.md) covers the exam update desk, returning-visitor strategy and practical monetization experiments.
+
+The [site-information guide](docs/site-information.md) covers Admissions, Certificate Verification, public policy/help pages and their administrator editor.
+
+**Local database: MySQL 8.0.45 (`sarkarilinks_co_live`).** See the [cutover, backup and master-data audit](docs/mysql-cutover-and-masters.md). The master-data screens are not all complete or populated.
 
 ## Run on this workstation
 
@@ -14,7 +22,7 @@ npm.cmd run dev
 
 The launcher starts the frontend, API, queue worker and scheduler. On a fresh workstation run root/frontend `npm.cmd ci`, `npm.cmd run setup:tools` and `npm.cmd run setup:media`; see the linked guide. Local setup and additive migrations have already been applied.
 
-Open **http://127.0.0.1:5173** or **http://127.0.0.1:5173/admin**. The command starts the frontend, Laravel and scheduler using the isolated PHP 8.4 runtime already installed in `.cache/php84`. Local account credentials are in `backend/storage/app/private/local-accounts.json`. The working SQLite database has been migrated and seeded with roles. See the walkthrough for creating and publishing your first notice.
+Open **http://127.0.0.1:5173** or **http://127.0.0.1:5173/admin**. The command starts the frontend, Laravel and scheduler using the isolated PHP 8.4 runtime already installed in `.cache/php84`. Local account credentials are in `backend/storage/app/private/local-accounts.json`. The working MySQL database contains the migrated accounts, roles and project data; the SQLite source and a private cutover backup are retained. See the walkthrough for creating and publishing your first notice.
 
 ## Requirements
 

@@ -1,5 +1,7 @@
 # SRS delivery tracking
 
+For the current local release, use the [release notes](release-notes-2026-09-06.md), [simple workflow](quick-workflow.md) and [administrator manual](admin-user-manual.md). The [MySQL cutover and master-data audit](mysql-cutover-and-masters.md) records database status and unfinished masters.
+
 The current assessment is the [6 September SRS and role audit](srs-review-2026-09-06.md). It supersedes the historical status below. The [member/tools release](member-tools.md) adds the modern blue/teal UI and logo, member accounts/preferences/bookmarks, résumé builder, local AI/OCR/image tools, private media jobs and server-rendered SEO pages. PDF/image advertisement imports remain covered by the [import guide](advertisement-import.md).
 
 ## Latest correction: working staff CMS and RBAC

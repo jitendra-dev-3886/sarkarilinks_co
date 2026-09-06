@@ -19,7 +19,7 @@ class AdminContentController extends Controller
         $user = $request->user();
         $query = Content::query()->where(function ($query) use ($user) {
             $query->whereRaw('1 = 0');
-            foreach (['jobs', 'results', 'admit-cards', 'answer-keys', 'syllabus', 'schemes'] as $type) {
+            foreach (['jobs', 'results', 'admit-cards', 'answer-keys', 'syllabus', 'schemes', 'admissions', 'certificate-verification'] as $type) {
                 if ($user->hasPermission($type.'.view')) {
                     $query->orWhere(function ($query) use ($user, $type) {
                         $query->where('type', $type);

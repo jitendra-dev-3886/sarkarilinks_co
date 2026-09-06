@@ -11,7 +11,7 @@ class AccessControlSeeder extends Seeder
     {
         DB::transaction(function () {
             $content = [];
-            foreach (['jobs', 'results', 'admit-cards', 'answer-keys', 'syllabus', 'schemes'] as $type) {
+            foreach (['jobs', 'results', 'admit-cards', 'answer-keys', 'syllabus', 'schemes', 'admissions', 'certificate-verification'] as $type) {
                 foreach (['view', 'create', 'update', 'review', 'publish', 'archive'] as $action) {
                     $content[] = "$type.$action";
                 }

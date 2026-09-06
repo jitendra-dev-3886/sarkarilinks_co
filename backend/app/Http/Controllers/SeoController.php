@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 
 class SeoController extends Controller
 {
-    private const CATEGORIES = ['jobs' => 'Government jobs', 'results' => 'Results', 'admit-cards' => 'Admit cards', 'answer-keys' => 'Answer keys', 'syllabus' => 'Syllabus', 'schemes' => 'Government schemes'];
+    private const CATEGORIES = ['jobs' => 'Government jobs', 'results' => 'Results', 'admit-cards' => 'Admit cards', 'answer-keys' => 'Answer keys', 'syllabus' => 'Syllabus', 'schemes' => 'Government schemes', 'admissions' => 'Admissions', 'certificate-verification' => 'Certificate Verification'];
 
     private function origin(): string
     {
@@ -36,6 +36,11 @@ class SeoController extends Controller
         $urls = [];
         if ((int) $input['page'] === 1) {
             $urls = ['/', '/tools', ...array_map(fn ($type) => '/'.$type, array_keys(self::CATEGORIES))];
+            foreach (SitePageController::pages() as $slug => $page) {
+                if (! ($page['review_required'] ?? false)) {
+                    $urls[] = '/'.$slug;
+                }
+            }
             foreach (DB::table('portal_tools')->where('enabled', true)->pluck('slug') as $slug) {
                 $urls[] = '/tools/'.rawurlencode($slug);
             }
@@ -61,7 +66,25 @@ class SeoController extends Controller
         $body = '';
         $status = 200;
         $private = preg_match('~^(account|admin|login|search)(/|$)~', $path);
-        if ($path === '' || isset(self::CATEGORIES[$path])) {
+        $sitePage = SitePageController::page($path);
+        if ($sitePage) {
+            $title = $sitePage['title'];
+            $description = $sitePage['description'];
+            $private = $sitePage['review_required'] ?? false;
+            $body = '<h1>'.e($title).'</h1><p>'.e($description).'</p>';
+            if ($private) {
+                $body .= '<p>Draft: awaiting site-operator review.</p>';
+            }
+            foreach ($sitePage['sections'] as $section) {
+                $body .= '<section><h2>'.e($section['heading']).'</h2><p>'.nl2br(e($section['text'])).'</p></section>';
+            }
+            if ($path === 'sitemap') {
+                foreach ([...self::CATEGORIES, ...array_map(fn ($page) => $page['title'], SitePageController::pages()), 'tools' => 'Tools'] as $slug => $label) {
+                    $body .= '<p><a href="/'.e($slug).'">'.e($label).'</a></p>';
+                }
+                $body .= '<a href="/sitemap.xml">XML sitemap</a>';
+            }
+        } elseif ($path === '' || isset(self::CATEGORIES[$path])) {
             $title = self::CATEGORIES[$path] ?? $title;
             $body = '<h1>'.e($title).'</h1><p>'.e($description).'</p>';
             $query = Content::publiclyVisible()->where('locale', $locale);
@@ -115,7 +138,7 @@ class SeoController extends Controller
         $html = preg_replace_callback('~<title>.*?</title>~s', fn () => '<title>'.e($title).' | SarkariLinks</title>', $html);
         $html = preg_replace_callback('~<meta name="description"[^>]*>~', fn () => '<meta name="description" content="'.e(mb_substr($description, 0, 250)).'">', $html);
         $appearance = AppearanceController::current();
-        $html = str_replace('<html lang="en">', '<html lang="'.$locale.'" data-theme="'.e($appearance['theme']).'" data-text-size="'.e($appearance['text_size']).'">', $html);
+        $html = str_replace('<html lang="en">', '<html lang="'.$locale.'" data-theme="'.e($appearance['theme']).'" data-text-size="'.e($appearance['text_size']).'" data-home-layout="'.e($appearance['home_layout']).'">', $html);
         $head = '<link rel="canonical" href="'.e($canonical).'"><meta name="robots" content="'.($private || $status === 404 ? 'noindex,follow' : 'index,follow').'"><meta property="og:title" content="'.e($title).'"><meta property="og:description" content="'.e(mb_substr($description, 0, 250)).'"><meta property="og:url" content="'.e($canonical).'"><meta property="og:type" content="website">';
         $nav = '<header><a href="/">SarkariLinks</a><nav aria-label="Main navigation">';
         foreach (self::CATEGORIES as $slug => $label) {
