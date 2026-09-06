@@ -20,7 +20,7 @@ function shutdown(code = 0) {
 }
 process.on('SIGINT', () => shutdown());
 process.on('SIGTERM', () => shutdown());
-start(php, ['-S', '127.0.0.1:8000', '../vendor/laravel/framework/src/Illuminate/Foundation/resources/server.php'], 'backend/public');
+start(php, ['-d', 'upload_max_filesize=10M', '-d', 'post_max_size=12M', '-S', '127.0.0.1:8000', '../vendor/laravel/framework/src/Illuminate/Foundation/resources/server.php'], 'backend/public');
 start(php, ['artisan', 'schedule:work'], 'backend');
 start(php, ['artisan', 'queue:work', '--sleep=1', '--tries=1', '--timeout=270'], 'backend');
 start(process.execPath, ['node_modules/vite/bin/vite.js', '--host', '127.0.0.1', '--port', '5173', '--strictPort'], 'frontend');

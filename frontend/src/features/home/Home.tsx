@@ -1,71 +1,15 @@
-import Icon from '../../components/Icon';
-import { type FormEvent } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import ReturnVisit from './ReturnVisit';
 import { useQuery } from '@tanstack/react-query';
+import { Link, useNavigate } from 'react-router-dom';
 import { categories, getJson, type Page } from '../../api/content';
-
-const symbols = ['▤', '✓', '▣', '▧', '▥', '♜'];
-const names = ['Latest Jobs', 'Results', 'Admit Cards', 'Answer Key', 'Syllabus', 'Schemes'];
-const searches = ['SSC CGL', 'UPSC', 'IBPS PO', 'RRB NTPC', 'UP Police', 'CTET'];
-
-
-function Updates({ type, notifications = false }: { type?: string; notifications?: boolean }) {
-  const query = useQuery({
-    queryKey: ['home-updates', type],
-    queryFn: ({ signal }) => getJson<Page>(`/content?per_page=5${type ? `&type=${type}` : ''}`, signal),
-  });
-  if (query.isPending) return <div className="update-placeholder" role="status"><span className="loading-line" /><span className="loading-line" /><span className="loading-line" /><p>Loading latest updates…</p></div>;
-  if (query.error) return <div className="update-placeholder"><span className="empty-icon" aria-hidden="true">▤</span><strong>Updates are unavailable</strong><p>We couldn’t reach the updates service.</p><button className="text-button" onClick={() => void query.refetch()}>Try again ↻</button></div>;
-  if (!query.data?.data.length) return <div className="update-placeholder"><span className="empty-icon" aria-hidden="true">▤</span><strong>New updates coming soon</strong><p>Verified notices will appear here when published.</p><Link to={type ? `/${type}` : '/search'}>Explore updates →</Link></div>;
-  return <div className="home-feed">{query.data.data.map((item, index) => <Link key={item.id} to={`/${item.type}/${item.slug}`} className="home-feed-row"><span className={`mini-icon color-${index % 6}`} aria-hidden="true"><Icon name={symbols[index % 6]} /></span><span><strong>{item.title}</strong><small>{notifications ? item.organization : `${item.closing_date ? 'Last date: ' + item.closing_date : 'Published: ' + new Date(item.published_at).toLocaleDateString('en-IN')}`}</small></span><span aria-hidden="true" className="row-arrow">›</span></Link>)}</div>;
-}
-
-export function QuickFilters() {
-  const navigate = useNavigate();
-  function apply(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const params = new URLSearchParams();
-    new FormData(event.currentTarget).forEach((value, key) => { if (value) params.set(key, String(value)); });
-    navigate(`/jobs?${params}`);
-  }
-  return <section className="quick-filters"><h2>Quick <span>Filters</span></h2><form onSubmit={apply}>
-    {([
-      ['qualification', 'Qualification', [['10th', '10th pass'], ['12th', '12th pass'], ['graduate', 'Graduate'], ['postgraduate', 'Postgraduate']]],
-      ['state', 'State', [['uttar-pradesh', 'Uttar Pradesh'], ['bihar', 'Bihar'], ['delhi', 'Delhi'], ['rajasthan', 'Rajasthan']]],
-      ['department', 'Department', [['ssc', 'SSC'], ['upsc', 'UPSC'], ['railways', 'Railways'], ['banking', 'Banking']]],
-      ['category', 'Category', [['central-government', 'Central government'], ['state-government', 'State government'], ['defence', 'Defence'], ['teaching', 'Teaching']]],
-      ['sort', 'Closing date', [['closing-soon', 'Closing soon'], ['newest', 'Newest first']]],
-    ] as const).map(([name, label, options]) => <label key={name}>{label}<select name={name} defaultValue=""><option value="">Select</option>{options.map(([value, text]) => <option key={value} value={value}>{text}</option>)}</select></label>)}
-    <button type="submit">☷ Apply Filters</button>
-  </form></section>;
-}
-
+import { BookmarkButton, useMemberSession } from '../account/Account';
+import { ToolCard, type PortalTool } from '../tools/Tools';
 export default function Home() {
-  const navigate = useNavigate();
-  const toolQuery = useQuery({ queryKey: ['tools'], queryFn: () => getJson<{ data: { slug: string; name: string }[] }>('/tools') });
-  function search(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    navigate(`/search?q=${encodeURIComponent(String(new FormData(event.currentTarget).get('q') ?? '').trim())}`);
-  }
-  return <div className="portal-layout"><div className="portal-primary">
-    <section className="reference-hero">
-      <div className="hero-building" aria-hidden="true" />
-      <div className="hero-copy"><span className="hero-kicker">YOUR NEXT OPPORTUNITY STARTS HERE</span><h1>Find Your Dream<br /><span>Government Job</span></h1><p>Latest Jobs, Results, Admit Cards, Schemes and<br className="desktop-break" /> All Government Updates in One Place</p>
-        <form className="hero-search" role="search" onSubmit={search}><span aria-hidden="true">⌕</span><label className="sr-only" htmlFor="home-search">Search government updates</label><input id="home-search" name="q" placeholder="Search for jobs, results, admit cards…" maxLength={150} /><button>Search</button></form>
-        <div className="trending"><span>Popular searches:</span>{searches.map(term => <Link key={term} to={`/search?q=${encodeURIComponent(term)}`}>{term}</Link>)}</div>
-      </div>
-    </section>
-    <div className="discovery-shortcuts"><Link to="/jobs?sort=closing-soon"><span>?</span><div><strong>Closing soon</strong><small>Check deadlines before you apply</small></div><b>?</b></Link><Link to="/admit-cards"><span>?</span><div><strong>Ready for exam day?</strong><small>Find your admit card and instructions</small></div><b>?</b></Link></div><QuickFilters />
-    <section className="home-categories" aria-label="Browse updates">{categories.map(([path, , caption], index) => <Link key={path} to={`/${path}`} className={`home-category tint-${index}`}><span className={`mini-icon color-${index}`} aria-hidden="true"><Icon name={symbols[index]} /></span><strong>{names[index]}</strong><small>{caption}</small></Link>)}</section>
-    <div className="update-columns">{(['jobs', 'results', 'admit-cards', 'schemes'] as const).map((type, index) => <section className="home-panel" key={type}><div className="home-panel-heading"><h2>{['Latest Jobs', 'Latest Results', 'Admit Cards', 'Government Schemes'][index]}</h2><Link to={`/${type}`}>View All</Link></div><Updates type={type} /></section>)}</div>
-    <div className="home-bottom"><section className="preparation"><div className="study-art" aria-hidden="true">▤<span>✦</span></div><div><h2>Prepare Smarter, Not Harder!</h2><p>Find exam syllabuses and preparation resources.</p></div><Link to="/syllabus">Start Now</Link></section><LinkPanel title="Important Links" terms={['UPSC', 'SSC', 'Railway', 'Banking', 'State PSC', 'Defence', 'Teaching', 'All Jobs']} /><LinkPanel title="Popular Links" terms={['Exam Calendar', 'Current Affairs', 'Study Material', 'Government Schemes', 'Admit Cards', 'Job Alerts']} /></div>
-  </div><aside className="portal-sidebar">
-    <section className="home-panel notifications"><div className="home-panel-heading"><h2>Latest Notifications</h2><Link to="/search">View All</Link></div><Updates notifications /><Link className="outline-action" to="/search">Browse all notifications →</Link></section>
-    <section className="home-panel tools-panel" id="tools"><div className="home-panel-heading"><h2>Tools &amp; calculators</h2><Link to="/tools">View all</Link></div><div className="tools-grid">{toolQuery.data?.data.map((tool, index) => <Link key={tool.slug} className={`tool-card tint-${index}`} to={`/tools#${tool.slug}`}><span className={`mini-icon color-${index}`} aria-hidden="true">{['?', '?', '%'][index]}</span><strong>{tool.name}</strong></Link>)}</div>{toolQuery.error && <p className="tool-status">Tools could not be loaded. <button className="text-button" onClick={() => void toolQuery.refetch()}>Retry</button></p>}<p className="tool-status">Calculate on your device. No uploads needed.</p></section>
-    <section className="home-panel subscribe-panel"><h2>Stay Updated</h2><p>Get the latest updates in your inbox.</p><div className="subscribe-preview"><span>Email alerts are coming soon</span><span aria-hidden="true">✉</span></div><small>✓ Consent-based alerts &nbsp; ◇ Unsubscribe anytime</small></section>
-  </aside></div>;
-}
-
-function LinkPanel({ title, terms }: { title: string; terms: string[] }) {
-  return <section className="home-panel link-panel"><div className="home-panel-heading"><h2>{title}</h2></div><div className="link-chips">{terms.map(term => <Link key={term} to={`/search?q=${encodeURIComponent(term)}`}>{term}</Link>)}</div></section>;
+  const navigate = useNavigate(), session = useMemberSession();
+  const [jobSort, setJobSort] = useState('newest');
+  const jobs = useQuery({ queryKey: ['home-jobs', jobSort], queryFn: () => getJson<Page>(`/content?type=jobs&per_page=4&sort=${jobSort}`) });
+  const tools = useQuery({ queryKey: ['tools'], queryFn: () => getJson<{ data: PortalTool[] }>('/tools') });
+  const updates = useQuery({ queryKey: ['home-updates'], queryFn: () => getJson<Page>('/content?per_page=5') });
+  return <div className="saas-home">{session.data?.data?.roles.includes('administrator') && session.data.data.permissions.includes('settings.manage') && <div className="home-admin-actions"><Link to="/admin?tab=appearance">Customize homepage</Link><span>Administrator controls</span></div>}<section className="saas-hero"><div className="hero-copy"><span className="saas-badge"><span className="status-dot" /> YOUR NEXT CHAPTER STARTS HERE</span><h1>Find your opportunity.<br /><em>Make your next move.</em></h1><p>Government jobs you can verify. Everyday tools that save you time. A personal workspace to bring it all together.</p><form className="hero-search" role="search" onSubmit={e => { e.preventDefault(); navigate(`/search?q=${encodeURIComponent(String(new FormData(e.currentTarget).get('q') ?? '').trim())}`); }}><label className="sr-only" htmlFor="home-search">Search jobs and updates</label><span aria-hidden="true">⌕</span><input id="home-search" name="q" maxLength={150} placeholder="Job title, exam or organization..." /><button>Find opportunities <span aria-hidden="true">→</span></button></form><div className="hero-popular"><span>Explore</span>{['SSC', 'Railway', 'Banking', 'Teaching'].map(term => <Link to={`/search?q=${term}`} key={term}>{term}</Link>)}</div><div className="hero-trust"><span>✓ Official source links</span><span>✓ English & Hindi</span><span>✓ Free browser tools</span></div></div><aside className="hero-workspace"><div className="workspace-top"><span className="workspace-avatar">S</span><div><b>Your next move, organized</b><small>A workspace built around you</small></div><span className="workspace-spark" aria-hidden="true">✦</span></div><div className="workspace-notice"><span className="mini-label">YOUR OPPORTUNITY BOARD</span><h2>A little focus goes a long way.</h2><p>Set your preferences. Save your shortlist. Get application-ready.</p><Link to={session.data?.data ? '/account' : '/account/login'}>Open my workspace <span aria-hidden="true">↗</span></Link></div><div className="workspace-checklist"><Link to="/jobs"><span className="check-icon">01</span><div><b>Find the right opportunity</b><small>Browse the latest verified notices</small></div><span>↗</span></Link><Link to="/tools/resume-builder"><span className="check-icon teal">02</span><div><b>Make a great first impression</b><small>Create your résumé, your way</small></div><span>↗</span></Link><Link to="/tools/image-compressor"><span className="check-icon purple">03</span><div><b>Get your documents ready</b><small>Convert, compress and extract text</small></div><span>↗</span></Link></div><div className="workspace-bottom"><span className="status-dot" /> Small steps. Real progress.</div></aside></section><ReturnVisit tools={tools.data?.data ?? []} /><section className="opportunity-types" aria-label="Browse updates">{categories.map(([slug, label], index) => <Link key={slug} to={`/${slug}`}><span>{['▣', '✓', '▤', '☷', '▥', '◇'][index]}</span><b>{label}</b><span className="category-arrow">↗</span></Link>)}</section><section className="home-section"><div className="section-title"><div><span className="eyebrow">A FRESH START AWAITS</span><h2>Latest government jobs</h2><p>Explore published notices. Check the official source before you apply.</p></div><Link className="subtle-link" to="/jobs">View all jobs →</Link></div><div className="home-job-tabs" aria-label="Job ordering"><button aria-pressed={jobSort === 'newest'} onClick={() => setJobSort('newest')}>Latest jobs</button><button aria-pressed={jobSort === 'closing-soon'} onClick={() => setJobSort('closing-soon')}>Closing soon</button></div>{jobs.isPending && <p role="status">Loading latest jobs...</p>}{jobs.error && <p role="alert">{jobs.error.message}</p>}<div className="home-job-grid">{jobs.data?.data.map(item => <article className="panel home-job" key={item.id}><div className="job-card-top"><span className="organization-avatar">{item.organization.slice(0, 2).toUpperCase()}</span><BookmarkButton content={item} /></div><span className="eyebrow">{item.organization}</span><h3><Link to={`/jobs/${item.slug}?locale=${item.locale}`}>{item.title}</Link></h3><p>{item.summary}</p><div className="job-card-bottom"><span>{item.closing_date ? `Closes ${new Date(item.closing_date).toLocaleDateString('en-IN')}` : 'View notice for dates'}</span><Link to={`/jobs/${item.slug}?locale=${item.locale}`} aria-label={`Read ${item.title}`}>↗</Link></div></article>)}</div>{jobs.data?.data.length === 0 && <div className="empty-workspace"><h3>{jobSort === 'closing-soon' ? 'No upcoming deadlines right now' : 'Your next opportunity is on its way'}</h3><p>{jobSort === 'closing-soon' ? 'Check the latest jobs for notices without a listed closing date.' : 'Verified jobs will appear here when published. Explore the tools while you wait.'}</p><Link to="/tools">Get application-ready →</Link></div>}</section><section className="home-section home-tool-section"><div className="section-title"><div><span className="eyebrow">YOUR EVERYDAY ADVANTAGE</span><h2>Less effort. More done.</h2><p>Practical tools for your applications, documents and ideas.</p></div><Link className="subtle-link" to="/tools">Explore all tools →</Link></div>{tools.error && <p role="alert">{tools.error.message}</p>}<div className="tool-grid">{tools.data?.data.filter(tool => ['image-compressor', 'background-remover', 'resume-builder', 'image-to-text'].includes(tool.slug)).map(tool => <ToolCard key={tool.slug} tool={tool} />)}</div></section><section className="home-lower"><div className="panel latest-updates"><div className="section-title"><h2>Across your noticeboard</h2><Link to="/search">All updates →</Link></div>{updates.isPending && <p role="status">Loading updates...</p>}{updates.error && <p role="alert">{updates.error.message}</p>}{updates.data?.data.map(item => <Link key={item.id} className="noticeboard-row" to={`/${item.type}/${item.slug}?locale=${item.locale}`}><span className="notice-type">{item.type.replaceAll('-', ' ')}</span><b>{item.title}</b><span>↗</span></Link>)}{updates.data?.data.length === 0 && <p>Published jobs, results and notices will appear here.</p>}</div><div className="resume-promo"><span className="saas-badge">MADE FOR YOUR NEXT CHAPTER</span><h2>Your experience.<br />Beautifully presented.</h2><p>Three clean résumé templates, a live preview, and OCR to help you start from an existing document.</p><Link className="button" to="/tools/resume-builder">Build my résumé ↗</Link><small>No account needed to export a PDF.</small></div></section></div>;
 }

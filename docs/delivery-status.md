@@ -1,5 +1,7 @@
 # SRS delivery tracking
 
+The current assessment is the [6 September SRS and role audit](srs-review-2026-09-06.md). It supersedes the historical status below. The [member/tools release](member-tools.md) adds the modern blue/teal UI and logo, member accounts/preferences/bookmarks, résumé builder, local AI/OCR/image tools, private media jobs and server-rendered SEO pages. PDF/image advertisement imports remain covered by the [import guide](advertisement-import.md).
+
 ## Latest correction: working staff CMS and RBAC
 
 The backend now has database-backed roles and granular grants, session login/logout with CSRF and rate limiting, a React staff console, draft create/edit/preview, author ownership policies, independent reviewer approval, scheduling/publication/archive transitions, user creation/role assignment, role permission editing and append-only audit history. A local PHP 8.4 runtime is installed; backend tests and real browser workflows have now been executed. See [staff console and verification](staff-console.md) for the current setup and acceptance walkthrough.

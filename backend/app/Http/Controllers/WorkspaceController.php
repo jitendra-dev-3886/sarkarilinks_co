@@ -28,6 +28,7 @@ class WorkspaceController extends Controller
             DB::table('portal_tools')->where('slug', $slug)->update([...$input, 'updated_at' => now()]);
             Audit::record($request->user()->id, 'tool.updated', 'tool', $slug, (array) $before, $input);
         });
+
         return ['message' => 'Tool settings saved.'];
     }
 
@@ -44,6 +45,7 @@ class WorkspaceController extends Controller
     public function terms(Request $request)
     {
         $input = $request->validate(['locale' => ['sometimes', Rule::in(['en', 'hi'])]]);
+
         return ['data' => DB::table('terms')->where('locale', $input['locale'] ?? 'en')->orderBy('taxonomy')->orderBy('label')->get(['id', 'taxonomy', 'slug', 'label', 'locale'])];
     }
 
@@ -65,8 +67,10 @@ class WorkspaceController extends Controller
                 $id = DB::table('terms')->insertGetId([...$input, 'created_at' => now(), 'updated_at' => now()]);
             }
             Audit::record($request->user()->id, 'taxonomy.saved', 'term', $id, $before ? (array) $before : null, $input);
+
             return $id;
         });
+
         return response()->json(['data' => ['id' => $id, ...$input]]);
     }
 }

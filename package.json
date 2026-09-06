@@ -2,8 +2,12 @@
   "name": "sarkarilinks-workspace",
   "private": true,
   "scripts": {
+    "setup:tools": "node scripts/setup-browser-tools.mjs",
+    "setup:media": "node scripts/setup-media.mjs",
+    "preview": "node scripts/preview-built.mjs",
     "dev": "node scripts/dev.mjs",
-    "test:browser": "node scripts/test-browser.mjs",
+    "test:browser": "node scripts/test-extraction.mjs && node scripts/test-browser.mjs",
+    "test:extraction": "node scripts/test-extraction.mjs",
     "build": "npm --prefix frontend run build"
   },
   "dependencies": {

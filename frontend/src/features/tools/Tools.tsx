@@ -1,32 +1,25 @@
-import { useState, type FormEvent } from 'react';
+import { lazy, Suspense, useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import { Link, useParams } from 'react-router-dom';
 import { getJson } from '../../api/content';
-
+import { toolCatalog } from './catalog';
+import Calculator from './Calculator';
+import { rememberTool } from '../home/ReturnVisit';
+const ImageTools = lazy(() => import('./ImageTools'));
+const ResumeBuilder = lazy(() => import('./ResumeBuilder'));
+const MediaDownloader = lazy(() => import('./MediaDownloader'));
 export interface PortalTool { slug: string; name: string; help: string; enabled?: boolean; }
+export function ToolCard({ tool }: { tool: PortalTool }) { const info = toolCatalog[tool.slug]; if (!info) return null; return <Link className="tool-card" to={`/tools/${tool.slug}`}><div className="tool-card-top"><span aria-hidden="true" className={`tool-icon tone-${info.category.split(' ')[0].toLowerCase()}`}>{info.icon}</span><span className="tool-category">{info.category}</span></div><h3>{tool.name}</h3><p>{info.description}</p><span className="tool-open">Open tool <span aria-hidden="true">↗</span></span></Link>; }
 export default function Tools() {
+  const { tool: slug } = useParams();
+  const [search, setSearch] = useState(''), [category, setCategory] = useState('All tools');
   const query = useQuery({ queryKey: ['tools'], queryFn: () => getJson<{ data: PortalTool[] }>('/tools') });
-  return <section><div className="page-intro"><span className="eyebrow">USEFUL EVERY DAY</span><h1>Tools &amp; calculators</h1><p>Quick calculations on your device. Your inputs are never uploaded.</p></div>{query.isPending && <p role="status">Loading tools…</p>}{query.error && <p role="alert">{query.error.message}</p>}<div className="calculator-grid">{query.data?.data.map(tool => <Calculator key={tool.slug} tool={tool} />)}</div>{query.data?.data.length === 0 && <p className="feedback">No tools are currently enabled.</p>}</section>;
-}
-function Calculator({ tool }: { tool: PortalTool }) {
-  const [result, setResult] = useState('');
-  function calculate(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const form = new FormData(event.currentTarget);
-    if (tool.slug === 'age') {
-      const birth = new Date(String(form.get('birth')) + 'T00:00:00Z');
-      const cutoff = new Date(String(form.get('cutoff')) + 'T00:00:00Z');
-      if (birth > cutoff) { setResult('The cut-off date must be on or after the date of birth.'); return; }
-      let years = cutoff.getUTCFullYear() - birth.getUTCFullYear();
-      if (cutoff.getUTCMonth() < birth.getUTCMonth() || (cutoff.getUTCMonth() === birth.getUTCMonth() && cutoff.getUTCDate() < birth.getUTCDate())) years--;
-      setResult(`${years} completed years on the selected cut-off date.`);
-    } else if (tool.slug === 'percentage') {
-      const marks = Number(form.get('marks')), maximum = Number(form.get('maximum'));
-      setResult(marks > maximum ? 'Marks obtained cannot exceed maximum marks.' : `${(marks / maximum * 100).toFixed(2)}%`);
-    } else {
-      const principal = Number(form.get('principal')), rate = Number(form.get('rate')) / 1200, months = Number(form.get('months'));
-      const payment = rate === 0 ? principal / months : principal * rate / (1 - (1 + rate) ** -months);
-      setResult(`${new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 2 }).format(payment)} per month`);
-    }
-  }
-  return <article className="panel calculator" id={tool.slug}><span className="eyebrow">PRIVATE · INSTANT</span><h2>{tool.name}</h2><p>{tool.help}</p><form onSubmit={calculate} onChange={() => setResult('')}>{tool.slug === 'age' ? <><label>Date of birth<input type="date" name="birth" required /></label><label>Cut-off date<input type="date" name="cutoff" required /></label></> : tool.slug === 'percentage' ? <><label>Marks obtained<input type="number" name="marks" required min="0" max="10000000" step="any" /></label><label>Maximum marks<input type="number" name="maximum" required min="0.01" max="10000000" step="any" /></label></> : <><label>Loan amount (₹)<input type="number" name="principal" min="1" max="1000000000" required /></label><label>Annual interest rate (%)<input type="number" name="rate" min="0" max="100" step="0.01" required /></label><label>Number of monthly payments<input type="number" name="months" min="1" max="600" required /></label></>}<button>Calculate</button><output aria-live="polite">{result}</output></form></article>;
+  useEffect(() => { if (slug && query.data?.data.some(tool => tool.slug === slug)) rememberTool(slug); }, [slug, query.data]);
+  if (query.isPending) return <p role="status">Loading tools...</p>;
+  if (query.error) return <p role="alert">{query.error.message}</p>;
+  const available = query.data?.data.filter(tool => toolCatalog[tool.slug]) ?? [];
+  const tool = available.find(item => item.slug === slug), info = slug ? toolCatalog[slug] : null;
+  if (slug) return tool && info ? <section className="tool-detail"><Link className="back-link" to="/tools">← All tools</Link><div className="tool-detail-heading"><span className="tool-icon">{info.icon}</span><div><span className="eyebrow">{info.category} · {slug === 'media-downloader' ? 'ACCOUNT REQUIRED' : 'PROCESSED ON YOUR DEVICE'}</span><h1>{tool.name}</h1><p>{info.description}</p></div></div><Suspense fallback={<p role="status">Opening your tool...</p>}>{['age', 'percentage', 'emi'].includes(slug) ? <Calculator tool={tool} /> : slug === 'resume-builder' ? <ResumeBuilder /> : slug === 'media-downloader' ? <MediaDownloader /> : <ImageTools slug={slug} key={slug} />}</Suspense><section className="tool-how"><h2>How to use {tool.name.toLowerCase()}</h2><ol>{info.steps.map(step => <li key={step}>{step}</li>)}</ol><p>{tool.help}</p></section><div className="section-title"><h2>Keep things moving</h2><Link to="/tools">Explore all tools →</Link></div><div className="tool-grid related-tools">{available.filter(item => item.slug !== slug).slice(0, 3).map(item => <ToolCard key={item.slug} tool={item} />)}</div></section> : <section><h1>Tool unavailable</h1><p>This tool is not currently enabled.</p><Link to="/tools">Browse available tools</Link></section>;
+  const filtered = available.filter(tool => (category === 'All tools' || toolCatalog[tool.slug].category === category) && `${tool.name} ${toolCatalog[tool.slug].description}`.toLowerCase().includes(search.toLowerCase()));
+  return <section className="tools-directory"><div className="tools-hero"><span className="saas-badge">LESS BUSYWORK. MORE POSSIBILITY.</span><h1>Small tools.<br /><em>Big everyday wins.</em></h1><p>Make your next application, document or creative task a little easier. Useful tools, with local AI where it helps.</p><label className="tool-search"><span className="sr-only">Find a tool</span><input type="search" placeholder="Find a tool... try image, résumé or PDF" value={search} onChange={e => setSearch(e.target.value)} /></label><div className="privacy-pills"><span>✓ Image files stay on your device</span><span>✓ No AI subscription needed</span></div></div><div className="tool-tabs" aria-label="Tool categories">{['All tools', ...new Set(available.map(tool => toolCatalog[tool.slug].category))].map(group => <button key={group} className={category === group ? 'selected' : ''} aria-pressed={category === group} onClick={() => setCategory(group)}>{group}</button>)}</div><p className="tool-count" role="status">{filtered.length} tools to make room for what matters</p><div className="tool-grid">{filtered.map(tool => <ToolCard key={tool.slug} tool={tool} />)}</div>{filtered.length === 0 && <div className="empty-workspace"><h2>No tools found</h2><p>Try another search or category.</p><button onClick={() => { setSearch(''); setCategory('All tools'); }}>Show all tools</button></div>}<div className="tools-bottom"><span className="tool-icon">✦</span><div><h2>Your files. Your control.</h2><p>Image editing, OCR and résumé previews run in your browser. Account saves and media-link downloads are clearly marked when server processing is needed.</p></div></div></section>;
 }

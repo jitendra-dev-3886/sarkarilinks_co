@@ -3,6 +3,19 @@ on: [push, pull_request]
 permissions:
   contents: read
 jobs:
+  extraction:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - run: sudo apt-get update && sudo apt-get install -y fonts-noto-core
+      - run: npm ci
+      - run: npm run test:extraction
+      - run: npm audit --audit-level=high
   frontend:
     runs-on: ubuntu-latest
     defaults:
@@ -16,6 +29,8 @@ jobs:
           cache: npm
           cache-dependency-path: frontend/package-lock.json
       - run: npm ci
+      - run: npm ci --prefix ..
+      - run: node ../scripts/setup-browser-tools.mjs
       - run: npm run build
       - run: npm audit --audit-level=high
   backend:
@@ -35,3 +50,28 @@ jobs:
       - run: php artisan test
       - run: composer audit
       - run: vendor/bin/pint --test
+  browser:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: pdo_sqlite, intl, zip
+          coverage: none
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: composer install --working-dir=backend --prefer-dist --no-interaction
+      - run: npm ci && npm ci --prefix frontend
+      - run: npm run setup:tools && npm run setup:media
+      - run: sudo apt-get update && sudo apt-get install -y fonts-noto-core
+      - run: npm run test:extraction && npm run build
+      - run: npx --prefix frontend playwright install --with-deps chrome
+      - run: .cache/tools-python/bin/python scripts/test-media.py
+      - run: node scripts/test-browser.mjs --built
+        env:
+          PORTAL_PHP: php

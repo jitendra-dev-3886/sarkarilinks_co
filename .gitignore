@@ -13,3 +13,4 @@ test-results/
 playwright-report/
 backend/storage/app/private/local-accounts.json
 backend/database/*.sqlite*
+frontend/public/tool-assets/

@@ -24,6 +24,7 @@ class AccessController extends Controller
         DB::transaction(function () use ($request, $role, $input) {
             Role::query()->lockForUpdate()->findOrFail($role->id);
             $before = DB::table('permission_role')->join('permissions', 'permissions.id', '=', 'permission_role.permission_id')->where('role_id', $role->id)->pluck('permissions.name')->all();
+            abort_if(array_diff($before, $request->user()->permissionNames()) !== [], 403, 'You cannot modify a role with permissions beyond your own.');
             DB::table('permission_role')->where('role_id', $role->id)->delete();
             foreach (DB::table('permissions')->whereIn('name', $input['permissions'])->pluck('id') as $id) {
                 DB::table('permission_role')->insert(['role_id' => $role->id, 'permission_id' => $id]);

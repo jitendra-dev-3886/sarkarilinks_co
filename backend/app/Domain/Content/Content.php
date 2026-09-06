@@ -2,9 +2,11 @@
 
 namespace App\Domain\Content;
 
+use App\Models\AdvertisementImport;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\DB;
 
 class Content extends Model
 {
@@ -14,18 +16,23 @@ class Content extends Model
 
     protected $guarded = ['id'];
 
-    protected $appends = ['term_ids'];
+    protected $appends = ['term_ids', 'has_advertisement'];
+
+    public function getHasAdvertisementAttribute(): bool
+    {
+        return AdvertisementImport::where('content_id', $this->id)->exists();
+    }
 
     public function getTermIdsAttribute(): array
     {
-        return \Illuminate\Support\Facades\DB::table('content_term')->where('content_id', $this->id)->pluck('term_id')->all();
+        return DB::table('content_term')->where('content_id', $this->id)->pluck('term_id')->all();
     }
 
     public function syncTerms(array $ids): void
     {
-        \Illuminate\Support\Facades\DB::table('content_term')->where('content_id', $this->id)->delete();
+        DB::table('content_term')->where('content_id', $this->id)->delete();
         foreach ($ids as $id) {
-            \Illuminate\Support\Facades\DB::table('content_term')->insert(['content_id' => $this->id, 'term_id' => $id]);
+            DB::table('content_term')->insert(['content_id' => $this->id, 'term_id' => $id]);
         }
     }
 

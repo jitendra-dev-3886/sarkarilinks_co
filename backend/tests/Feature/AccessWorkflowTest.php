@@ -55,6 +55,25 @@ class AccessWorkflowTest extends TestCase
         $this->postJson('/api/v1/admin/content/'.$content->id.'/transitions', ['action' => 'submit'])->assertForbidden();
     }
 
+    public function test_user_management_grant_does_not_bypass_draft_ownership(): void
+    {
+        $content = $this->draft($this->user('author'));
+        $delegate = $this->user('author');
+        DB::table('permission_role')->insert(['role_id' => Role::where('name', 'author')->value('id'), 'permission_id' => DB::table('permissions')->where('name', 'users.manage')->value('id')]);
+        $this->actingAs($delegate)->putJson('/api/v1/admin/content/'.$content->id, $this->input())->assertForbidden();
+        $this->postJson('/api/v1/admin/content/'.$content->id.'/transitions', ['action' => 'submit'])->assertForbidden();
+    }
+
+    public function test_delegated_role_manager_cannot_strip_permissions_from_more_privileged_roles(): void
+    {
+        $delegate = $this->user('operations');
+        $roleId = Role::where('name', 'operations')->value('id');
+        foreach (['roles.manage', 'roles.view'] as $name) {
+            DB::table('permission_role')->insert(['role_id' => $roleId, 'permission_id' => DB::table('permissions')->where('name', $name)->value('id')]);
+        }
+        $this->actingAs($delegate)->putJson('/api/v1/admin/roles/'.Role::where('name', 'reviewer')->value('id').'/permissions', ['permissions' => []])->assertForbidden();
+    }
+
     public function test_author_to_independent_reviewer_publication_and_audit(): void
     {
         $author = $this->user('author');

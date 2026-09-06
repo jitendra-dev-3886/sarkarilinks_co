@@ -19,7 +19,7 @@ class ContentPolicy
     {
         return $content->status === ContentStatus::Draft
             && $user->hasPermission($content->type.'.update')
-            && ($content->author_id === $user->id || $user->hasPermission('users.manage'));
+            && ($content->author_id === $user->id || $user->roles()->where('name', 'administrator')->exists());
     }
 
     public function submit(User $user, Content $content): bool

@@ -1,0 +1,117 @@
+import { test, expect } from '@playwright/test';
+import { resolve } from 'node:path';
+import { readFile } from 'node:fs/promises';
+
+test('member registration, saved jobs and private resume survive signing out and in', async ({ page }) => {
+  await page.goto('/account/login');
+  await page.getByRole('button', { name: 'Create account', exact: true }).click();
+  await page.getByLabel('Full name').fill('Sample Member');
+  await page.getByLabel('Email address').fill('new-member@example.test');
+  await page.getByLabel('Password', { exact: true }).fill('MemberBrowser123!');
+  await page.getByLabel('Confirm password').fill('MemberBrowser123!');
+  await page.getByRole('button', { name: 'Create my account' }).click();
+  await expect(page.getByRole('heading', { name: /Hello, Sample/ })).toBeVisible();
+  await page.goto('/');
+  await page.locator('.return-shortcuts').getByRole('link', { name: /Update preferences/ }).click();
+  await expect(page).toHaveURL(/tab=preferences/);
+  await expect(page.getByRole('heading', { name: 'Make it personal' })).toBeVisible();
+  expect((await page.request.get('/api/v1/admin/content', { headers: { Accept: 'application/json' } })).status()).toBe(403);
+  await page.goto('/jobs/member-test-opportunity');
+  await expect(page).toHaveTitle('Synthetic member opportunity | SarkariLinks');
+  await page.getByRole('button', { name: 'Save job' }).click();
+  await expect(page.getByRole('button', { name: 'Saved' })).toHaveAttribute('aria-pressed', 'true');
+  await page.goto('/account');
+  await page.getByRole('button', { name: 'Saved jobs', exact: true }).click();
+  await expect(page.getByRole('link', { name: 'Synthetic member opportunity' })).toBeVisible();
+  await page.getByRole('button', { name: 'Profile & preferences' }).click();
+  await page.getByLabel('Your name', { exact: true }).fill('Sample Updated');
+  await page.getByRole('button', { name: 'Save preferences' }).click();
+  await expect(page.getByText('Preferences saved. Your job suggestions are updated.')).toBeVisible();
+  await page.goto('/tools/resume-builder');
+  await page.getByLabel('Full name').fill('Sample Updated');
+  await page.getByLabel('headline', { exact: true }).fill('Software engineer');
+  await page.getByLabel('experience', { exact: true }).fill('Built accessible tools for applicants.');
+  await page.getByRole('combobox', { name: 'Template', exact: true }).selectOption('classic');
+  await page.getByRole('button', { name: 'Save to my account' }).click();
+  await expect(page.getByText('Résumé saved to your account.', { exact: true })).toBeVisible();
+  await page.reload();
+  await page.getByRole('button', { name: 'Load saved résumé' }).click();
+  await expect(page.getByLabel('Full name')).toHaveValue('Sample Updated');
+  await expect(page.locator('.resume-paper')).toHaveClass(/resume-classic/);
+  await page.emulateMedia({ media: 'print' });
+  await expect(page.locator('.resume-editor')).toBeHidden();
+  await expect(page.locator('.resume-paper')).toBeVisible();
+  await page.emulateMedia({ media: 'screen' });
+  await page.setViewportSize({ width: 390, height: 844 });
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  await page.screenshot({ path: 'test-results/resume-mobile.png', fullPage: true });
+  await page.goto('/account');
+  await page.getByRole('button', { name: 'Sign out', exact: true }).click();
+  await page.getByLabel('Email address').fill('new-member@example.test');
+  await page.getByLabel('Password', { exact: true }).fill('MemberBrowser123!');
+  await page.getByRole('button', { name: 'Sign in to my workspace' }).click();
+  await expect(page.getByRole('heading', { name: /Hello, Sample/ })).toBeVisible();
+});
+
+test('image conversion and PDF export produce actual downloadable files without uploading the image', async ({ page }) => {
+  const uploads: string[] = [];
+  page.on('request', request => { if (request.method() === 'POST' || request.method() === 'PUT') uploads.push(request.url()); });
+  await page.goto('/tools/image-converter');
+  await page.getByLabel('Choose file').setInputFiles(resolve('..', '.cache/extraction-tests/recruitment.png'));
+  await page.getByLabel('Output format').selectOption('image/webp');
+  await page.getByLabel('Maximum width').fill('600');
+  await page.getByRole('button', { name: 'Convert image' }).click();
+  await expect(page.getByRole('heading', { name: 'Your file is ready' })).toBeVisible();
+  await expect(page.getByAltText('Processed image preview')).toHaveJSProperty('naturalWidth', 600);
+  const pending = page.waitForEvent('download');
+  await page.getByRole('button', { name: 'Download image' }).click();
+  const file = await pending, bytes = await readFile((await file.path())!);
+  expect(file.suggestedFilename()).toMatch(/\.webp$/);
+  expect(bytes.toString('ascii', 8, 12)).toBe('WEBP');
+  await page.goto('/tools/image-to-pdf');
+  await page.getByLabel('Choose file').setInputFiles(resolve('..', '.cache/extraction-tests/recruitment.png'));
+  await page.getByRole('button', { name: 'Create PDF' }).click();
+  const pdfPending = page.waitForEvent('download');
+  await page.getByRole('button', { name: 'Download PDF' }).click();
+  const pdf = await readFile((await (await pdfPending).path())!);
+  expect(pdf.toString('ascii', 0, 5)).toBe('%PDF-');
+  expect(uploads).toEqual([]);
+});
+
+test('OCR reads a real image and native PDF locally and tool directory is usable on mobile', async ({ page }) => {
+  test.setTimeout(120_000);
+  const external: string[] = [];
+  page.on('request', request => { if (/^https?:/.test(request.url()) && !request.url().startsWith('http://127.0.0.1:5175')) external.push(request.url()); });
+  await page.goto('/tools/image-to-text');
+  await page.getByLabel('Choose file').setInputFiles(resolve('..', '.cache/extraction-tests/recruitment.png'));
+  await page.getByRole('button', { name: 'Extract text', exact: true }).click();
+  await expect(page.getByLabel('Extracted text')).toHaveValue(/120/, { timeout: 90_000 });
+  await page.getByLabel('Choose file').setInputFiles(resolve('..', '.cache/extraction-tests/recruitment.pdf'));
+  await page.getByRole('button', { name: 'Extract text', exact: true }).click();
+  await expect(page.getByLabel('Extracted text')).toHaveValue(/120/, { timeout: 30000 });
+  expect(external).toEqual([]);
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/tools');
+  await page.getByLabel('Find a tool', { exact: true }).fill('background');
+  await expect(page.locator('.tools-directory .tool-card')).toHaveCount(1);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  await page.getByRole('button', { name: 'Menu', exact: true }).click();
+  await expect(page.getByRole('navigation', { name: 'Main navigation' }).getByRole('link', { name: 'Latest jobs' })).toBeVisible();
+  await page.screenshot({ path: 'test-results/tools-mobile.png', fullPage: true });
+});
+
+test('local portrait model produces a transparent PNG', async ({ page }) => {
+  test.setTimeout(150_000);
+  await page.goto('/tools/background-remover');
+  // A real image file exercises model loading and inference; it is not a portrait-quality benchmark.
+  await page.getByLabel('Choose file').setInputFiles(resolve('..', '.cache/extraction-tests/recruitment.png'));
+  await page.getByRole('button', { name: 'Remove background', exact: true }).click();
+  await expect(page.getByRole('heading', { name: 'Your file is ready' })).toBeVisible({ timeout: 120_000 });
+  const alpha = await page.getByAltText('Processed image preview').evaluate((image: HTMLImageElement) => {
+    const canvas = document.createElement('canvas'); canvas.width = image.naturalWidth; canvas.height = image.naturalHeight;
+    const ctx = canvas.getContext('2d')!; ctx.drawImage(image, 0, 0);
+    const pixels = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+    return pixels.some((value, i) => i % 4 === 3 && value < 250);
+  });
+  expect(alpha).toBe(true);
+});

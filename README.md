@@ -2,13 +2,17 @@
 
 React + TypeScript public portal and Laravel 13 API, based on `SarkariLinks_Technical_SRS_React_Laravel_Docker.docx`.
 
-**Status: public portal plus tested staff login, role/permission management, core CMS and publishing workflow. The full SRS and production acceptance remain incomplete.** Start with the [staff console walkthrough](docs/staff-console.md).
+**Status: modern public portal, member accounts and job preferences/bookmarks, ten tools including local AI/OCR and a résumé builder, plus tested staff RBAC/CMS and advertisement extraction. Full SRS and production acceptance remain incomplete.** Start with the [member/tools setup and test guide](docs/member-tools.md), [advertisement import guide](docs/advertisement-import.md) and [SRS role audit](docs/srs-review-2026-09-06.md).
+
+The [homepage appearance guide](docs/appearance.md) explains the five administrator-selectable designs, reading sizes and returning-visitor shortcuts.
 
 ## Run on this workstation
 
 ```powershell
-npm run dev
+npm.cmd run dev
 ```
+
+The launcher starts the frontend, API, queue worker and scheduler. On a fresh workstation run root/frontend `npm.cmd ci`, `npm.cmd run setup:tools` and `npm.cmd run setup:media`; see the linked guide. Local setup and additive migrations have already been applied.
 
 Open **http://127.0.0.1:5173** or **http://127.0.0.1:5173/admin**. The command starts the frontend, Laravel and scheduler using the isolated PHP 8.4 runtime already installed in `.cache/php84`. Local account credentials are in `backend/storage/app/private/local-accounts.json`. The working SQLite database has been migrated and seeded with roles. See the walkthrough for creating and publishing your first notice.
 
@@ -78,4 +82,4 @@ Feature tests cover publication visibility, ownership, authentication, CSRF, gra
 - `docker`: separate PHP and static frontend/Nginx images.
 - `docs`: decisions, delivery tracking and API contract.
 
-Public text is rendered as text, without raw HTML injection. Staff endpoints use same-origin Laravel cookie sessions and CSRF protection. Uploads and public subscriptions are not implemented yet.
+Public text is rendered as text, without raw HTML injection. Staff endpoints use same-origin Laravel cookie sessions and CSRF protection. Editorial uploads now support local English/Hindi PDF/image extraction and private originals; public subscriptions remain unimplemented. Run `npm run test:extraction` for real OCR fixtures and `npm run test:browser` for end-to-end checks.

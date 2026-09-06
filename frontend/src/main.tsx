@@ -4,9 +4,9 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter } from 'react-router-dom';
 import App from './app/App';
 import './styles.css';
-import './features/home/home.css';
-import './features/home/refinement.css';
 import './experience.css';
+import './saas.css';
+import './readability.css';
 
 class ErrorBoundary extends Component<{ children: ReactNode }, { failed: boolean }> {
   state = { failed: false };

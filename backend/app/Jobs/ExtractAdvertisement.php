@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Application\AdvertisementExtractor;
+use App\Application\AdvertisementRejected;
 use App\Application\Audit;
 use App\Models\AdvertisementImport;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -16,6 +17,7 @@ class ExtractAdvertisement implements ShouldQueue
     use Queueable;
 
     public int $tries = 1;
+
     public int $timeout = 270;
 
     public function __construct(public int $importId) {}
@@ -42,8 +44,13 @@ class ExtractAdvertisement implements ShouldQueue
 
     public function failed(?Throwable $exception): void
     {
-        AdvertisementImport::whereKey($this->importId)->whereIn('status', ['queued', 'processing'])->update([
-            'status' => 'failed', 'error' => 'Extraction could not finish. Use a clear PDF (maximum 20 pages), JPG or PNG, or retry after checking the extraction worker.',
-        ]);
+        DB::transaction(function () use ($exception) {
+            $changed = AdvertisementImport::whereKey($this->importId)->whereIn('status', ['queued', 'processing'])->update([
+                'status' => 'failed', 'error' => $exception instanceof AdvertisementRejected ? $exception->getMessage() : 'Extraction could not finish. Use a clear PDF (maximum 50 pages), JPG or PNG, or retry after checking the extraction worker.',
+            ]);
+            if ($changed) {
+                Audit::record(null, 'advertisement.failed', 'advertisement', $this->importId, null, ['status' => 'failed']);
+            }
+        });
     }
 }

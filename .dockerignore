@@ -16,3 +16,4 @@ backend/storage/framework/cache/**
 **/test-results
 **/playwright-report
 backend/database/*.sqlite*
+frontend/public/tool-assets

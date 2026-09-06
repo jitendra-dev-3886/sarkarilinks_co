@@ -3,6 +3,7 @@ x-app: &app
   build:
     context: .
     dockerfile: docker/php/Dockerfile
+    target: runtime
   environment: &app-env
     APP_NAME: SarkariLinks
     APP_ENV: local
@@ -28,11 +29,13 @@ x-app: &app
       condition: service_healthy
   security_opt: ["no-new-privileges:true"]
   cap_drop: [ALL]
+  volumes: ["uploads:/var/www/html/storage/app/private"]
 services:
   nginx:
     build:
       context: .
-      dockerfile: docker/nginx/Dockerfile
+      dockerfile: docker/php/Dockerfile
+      target: web
     ports: ["127.0.0.1:8080:8080"]
     depends_on: [php-fpm]
     security_opt: ["no-new-privileges:true"]
@@ -41,9 +44,11 @@ services:
     <<: *app
   queue-worker:
     <<: *app
-    command: ["php", "artisan", "queue:work", "--sleep=3", "--tries=3", "--timeout=90", "--max-time=3600"]
+    command: ["php", "artisan", "queue:work", "--sleep=3", "--tries=1", "--timeout=270", "--max-time=3600"]
     restart: unless-stopped
-    stop_grace_period: 100s
+    stop_grace_period: 280s
+    mem_limit: 1g
+    cpus: 2
   scheduler:
     <<: *app
     command: ["php", "artisan", "schedule:work"]
@@ -70,5 +75,6 @@ services:
       timeout: 3s
       retries: 5
 volumes:
+  uploads:
   mysql-data:
   redis-data:

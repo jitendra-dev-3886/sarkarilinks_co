@@ -45,6 +45,7 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
+            'job_preferences' => 'array',
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];

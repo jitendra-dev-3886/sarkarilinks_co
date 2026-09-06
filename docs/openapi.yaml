@@ -2,7 +2,7 @@ openapi: 3.1.0
 info:
   title: SarkariLinks public content API
   version: 0.1.0
-  description: Initial read-only slice. Authentication and publishing APIs are not implemented.
+  description: Public content API. Staff and import contracts are documented in staff-console.md and advertisement-import.md. Member registration, profile, bookmarks, resume and media endpoint contracts are documented in member-tools.md.
 servers:
   - url: /api/v1
 paths:
@@ -83,6 +83,18 @@ components:
         title: { type: string }
         summary: { type: string }
         body: { type: string, description: Present on detail responses only; plain text }
+        details:
+          type: [object, 'null']
+          description: Reviewed structured fields on detail responses only; plain text values.
+          additionalProperties: false
+          properties:
+            vacancies: { type: [string, 'null'] }
+            eligibility: { type: [string, 'null'] }
+            fees: { type: [string, 'null'] }
+            important_dates: { type: [string, 'null'] }
+            application_process: { type: [string, 'null'] }
+            benefits: { type: [string, 'null'] }
+            exam_details: { type: [string, 'null'] }
         organization: { type: string }
         source_url: { type: string, format: uri }
         verified_at: { type: string, format: date-time }
