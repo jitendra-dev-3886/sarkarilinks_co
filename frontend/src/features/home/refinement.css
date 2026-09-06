@@ -1,0 +1,31 @@
+/* Keep the public page proportions close to the supplied desktop reference. */
+:root { font-family: Arial, 'Segoe UI', sans-serif; }
+.portal-header .brand { font-size: 22px; letter-spacing: -.4px; }
+.portal-brand-icon { display: inline-flex; align-items: center; }
+.portal-brand-icon svg { width: 34px; height: 38px; }
+.portal-header .staff-link { font-size: 11px; padding: 8px 14px; min-height: 36px; white-space: nowrap; border-radius: 5px; }
+.portal-header .header-search { min-width: 32px; }
+.portal-header nav a { font-size: 11px; }
+.reference-hero { min-height: 272px; }
+.hero-copy { width: 64%; padding: 23px 28px 18px; }
+.hero-copy h1 { font-size: clamp(30px, 2.65vw, 40px); line-height: 1.16; margin-bottom: 12px; }
+.hero-copy > p { font-size: 14px; }
+.hero-search input { min-height: 34px; }
+.hero-search button { min-height: 34px; }
+.trending { margin-top: 10px; }
+.quick-filters { padding: 8px 14px; }
+.home-category { padding: 8px 4px; }
+.home-category .mini-icon { width: 27px; height: 27px; border-radius: 7px; }
+.home-category .mini-icon svg { width: 18px; height: 18px; }
+.home-feed-row { min-height: 43px; padding: 7px 0; }
+.update-placeholder { min-height: 185px; padding: 18px 14px; }
+.notifications .update-placeholder { min-height: 180px; }
+.tools-grid { gap: 8px; }.tool-card { min-height: 77px; padding: 10px 4px; }
+.preparation { padding: 12px 14px; min-height: 94px; }
+.preparation h2 { font-size: 15px; }.preparation p { font-size: 10px; }
+.footer-grid { padding-top: 25px; padding-bottom: 25px; }
+.content-editor .role-options label { flex-direction: row; align-items: center; font-size: 12px; }
+.content-editor .role-options input { width: auto; }
+@media (max-width: 1250px) { .hero-copy { width: 78%; }.portal-header nav { gap: 10px; }.portal-header .brand { font-size: 20px; } }
+@media (max-width: 1000px) { .hero-copy { width: 72%; }.portal-header .staff-link { margin-left: 0; }.portal-header .menu-toggle { margin-left: auto; } }
+@media (max-width: 600px) { .hero-copy { width: 100%; padding: 23px 18px; }.hero-copy h1 { font-size: 30px; }.hero-copy > p { font-size: 13px; }.portal-header .brand small { font-size: 8px; }.portal-header .brand { font-size: 18px; }.portal-header .staff-link { font-size: 10px; padding: 8px; }.portal-header .header-inner { gap: 7px; padding: 9px 12px; }.portal-header .menu-toggle { min-height: 36px; font-size: 11px; padding: 8px 10px; }.portal-brand-icon svg { width: 25px; }.reference-hero { min-height: 285px; } }

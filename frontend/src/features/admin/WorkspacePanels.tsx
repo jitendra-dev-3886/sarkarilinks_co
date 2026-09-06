@@ -1,0 +1,29 @@
+import { useState } from 'react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { staffApi } from '../../api/session';
+import { getJson } from '../../api/content';
+import type { PortalTool } from '../tools/Tools';
+
+export function ToolManagement() {
+  const query = useQuery({ queryKey: ['admin-tools'], queryFn: () => staffApi<{ data: PortalTool[] }>('/admin/tools') });
+  const client = useQueryClient();
+  const mutation = useMutation({ mutationFn: ({ slug, body }: { slug: string; body: unknown }) => staffApi(`/admin/tools/${slug}`, 'PUT', body), onSuccess: () => { void client.invalidateQueries(); } });
+  return <section className="panel admin-panel"><h2>Manage tools</h2><p>Control availability and guidance for the calculators visitors can use.</p>{query.error && <p role="alert">{query.error.message}</p>}{query.data?.data.map(tool => <form key={tool.slug} className="content-editor" onSubmit={event => { event.preventDefault(); const data = new FormData(event.currentTarget); mutation.mutate({ slug: tool.slug, body: { name: data.get('name'), help: data.get('help'), enabled: data.has('enabled') } }); }}><label>Tool name<input name="name" required maxLength={255} defaultValue={tool.name} /></label><label>Help text<textarea name="help" required maxLength={2000} defaultValue={tool.help} /></label><label className="confirm-extraction"><input name="enabled" type="checkbox" defaultChecked={!!tool.enabled} />Available to visitors</label><button disabled={mutation.isPending}>Save tool</button></form>)}{mutation.error && <p role="alert" className="admin-error">{mutation.error.message}</p>}{mutation.isSuccess && <p role="status" className="admin-success">Tool settings saved and audited.</p>}</section>;
+}
+
+export interface Term { id: number; taxonomy: string; label: string; slug: string; locale: string; }
+export function TermFields({ selected = [], locale = 'en' }: { selected?: number[]; locale?: string }) {
+  const query = useQuery({ queryKey: ['terms', locale], queryFn: () => getJson<{ data: Term[] }>(`/terms?locale=${locale}`) });
+  return <details className="taxonomy-fields"><summary>Search filters &amp; classification</summary><p>Tag this notice so readers can find it by state, qualification, department and category.</p>{query.error && <p role="alert">{query.error.message}</p>}{query.data?.data.length === 0 && <p>No filters configured for this language yet. An administrator can add them in Taxonomy.</p>}<div className="form-grid">{['state', 'qualification', 'department', 'category'].map(group => <div key={group}><h4>{group}</h4><div className="role-options">{query.data?.data.filter(term => term.taxonomy === group).map(term => <label key={term.id}><input name="term_ids" type="checkbox" value={term.id} defaultChecked={selected.includes(term.id)} />{term.label}</label>)}</div></div>)}</div></details>;
+}
+export function Taxonomy() {
+  const [locale, setLocale] = useState('en');
+  const query = useQuery({ queryKey: ['terms', locale], queryFn: () => getJson<{ data: Term[] }>(`/terms?locale=${locale}`) });
+  const client = useQueryClient();
+  const save = useMutation({ mutationFn: (body: unknown) => staffApi('/admin/terms', 'POST', body), onSuccess: () => { void client.invalidateQueries({ queryKey: ['terms'] }); } });
+  return <section className="panel admin-panel"><h2>Taxonomy &amp; search filters</h2><p>Create a filter, or use an existing slug to update its label. Changes are audited.</p><form className="content-editor" onSubmit={event => { event.preventDefault(); save.mutate(Object.fromEntries(new FormData(event.currentTarget))); }}><div className="form-grid"><label>Taxonomy<select name="taxonomy">{['state', 'qualification', 'department', 'category'].map(value => <option key={value}>{value}</option>)}</select></label><label>Language<select name="locale" value={locale} onChange={e => setLocale(e.target.value)}><option value="en">English</option><option value="hi">Hindi</option></select></label><label>Label<input name="label" required maxLength={255} /></label><label>Slug<input name="slug" required pattern="[a-z0-9]+(-[a-z0-9]+)*" maxLength={100} /></label></div><button disabled={save.isPending}>Save filter</button></form>{save.error && <p role="alert" className="admin-error">{save.error.message}</p>}{save.isSuccess && <p role="status" className="admin-success">Filter saved.</p>}<div className="permission-grid">{['state', 'qualification', 'department', 'category'].map(group => <article key={group}><h3>{group}</h3>{query.data?.data.filter(term => term.taxonomy === group).map(term => <p key={term.id}><strong>{term.label}</strong><small> · {term.slug}</small></p>)}</article>)}</div></section>;
+}
+export function Operations() {
+  const query = useQuery({ queryKey: ['operations'], queryFn: () => staffApi<{ data: { imports: Record<string, number>; failed_jobs: number; scheduled_content: number; checked_at: string } }>('/admin/operations'), refetchInterval: 15000 });
+  return <section className="panel admin-panel"><div className="admin-toolbar"><h2>Operations overview</h2><button className="secondary" onClick={() => void query.refetch()}>Refresh</button></div><p>Queue and publishing status. Counts refresh every 15 seconds.</p>{query.error && <p className="admin-error" role="alert">{query.error.message}</p>}{query.data && <><div className="workspace-stats">{Object.entries({ 'Queued imports': query.data.data.imports.queued ?? 0, 'Processing imports': query.data.data.imports.processing ?? 0, 'Failed imports': query.data.data.imports.failed ?? 0, 'Failed queue jobs': query.data.data.failed_jobs, 'Scheduled notices': query.data.data.scheduled_content }).map(([label, value]) => <div key={label}><strong>{value}</strong><span>{label}</span></div>)}</div><p>Last checked: {new Date(query.data.data.checked_at).toLocaleString('en-IN')}</p></>}</section>;
+}

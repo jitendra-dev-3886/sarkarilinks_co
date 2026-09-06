@@ -1,0 +1,3 @@
+# This directory contains source code and private development state.
+# Serve the portal with npm run dev, Docker, or a properly configured public root.
+Require all denied

@@ -1,0 +1,92 @@
+openapi: 3.1.0
+info:
+  title: SarkariLinks public content API
+  version: 0.1.0
+  description: Initial read-only slice. Authentication and publishing APIs are not implemented.
+servers:
+  - url: /api/v1
+paths:
+  /content:
+    get:
+      operationId: listContent
+      summary: List current verified published content
+      parameters:
+        - { name: q, in: query, schema: { type: string, maxLength: 150 } }
+        - { name: type, in: query, schema: { $ref: '#/components/schemas/ContentType' } }
+        - { name: locale, in: query, schema: { type: string, enum: [en, hi], default: en } }
+        - { name: sort, in: query, schema: { type: string, enum: [newest, closing-soon], default: newest } }
+        - { name: page, in: query, schema: { type: integer, minimum: 1, maximum: 10000 } }
+        - { name: per_page, in: query, schema: { type: integer, minimum: 1, maximum: 50, default: 15 } }
+        - { name: state, in: query, schema: { type: string, maxLength: 100 } }
+        - { name: qualification, in: query, schema: { type: string, maxLength: 100 } }
+        - { name: department, in: query, schema: { type: string, maxLength: 100 } }
+        - { name: category, in: query, schema: { type: string, maxLength: 100 } }
+      responses:
+        '200':
+          description: Paginated public content. Body is omitted from listing items.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data, meta, links]
+                properties:
+                  data: { type: array, items: { $ref: '#/components/schemas/Content' } }
+                  meta:
+                    type: object
+                    required: [current_page, last_page, total]
+                    properties:
+                      current_page: { type: integer }
+                      last_page: { type: integer }
+                      total: { type: integer }
+                  links: { type: object }
+        '422': { description: Invalid filter parameters; standard Laravel message/errors JSON }
+        '429': { description: Rate limit exceeded }
+  /content/{type}/{slug}:
+    get:
+      operationId: showContent
+      parameters:
+        - { name: type, in: path, required: true, schema: { $ref: '#/components/schemas/ContentType' } }
+        - { name: slug, in: path, required: true, schema: { type: string } }
+        - { name: locale, in: query, schema: { type: string, enum: [en, hi], default: en } }
+      responses:
+        '200':
+          description: Public content, including plain-text body
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data]
+                properties:
+                  data: { $ref: '#/components/schemas/Content' }
+        '404': { description: Missing, unpublished, unverified, future, expired or deleted record }
+        '422': { description: Invalid locale }
+        '429': { description: Rate limit exceeded }
+  /health/ready:
+    get:
+      operationId: readiness
+      responses:
+        '200': { description: Database connection available }
+        '503': { description: Database unavailable; no infrastructure details disclosed }
+components:
+  schemas:
+    ContentType:
+      type: string
+      enum: [jobs, results, admit-cards, answer-keys, syllabus, schemes]
+    Content:
+      type: object
+      required: [id, type, locale, slug, title, summary, organization, source_url, verified_at, published_at, updated_at, closing_date, deadline_timezone]
+      properties:
+        id: { type: integer }
+        type: { $ref: '#/components/schemas/ContentType' }
+        locale: { type: string }
+        slug: { type: string }
+        title: { type: string }
+        summary: { type: string }
+        body: { type: string, description: Present on detail responses only; plain text }
+        organization: { type: string }
+        source_url: { type: string, format: uri }
+        verified_at: { type: string, format: date-time }
+        published_at: { type: string, format: date-time }
+        updated_at: { type: string, format: date-time }
+        closing_date: { type: [string, 'null'], format: date }
+        deadline_timezone: { type: string }
