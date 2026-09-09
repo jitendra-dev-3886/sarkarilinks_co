@@ -1,0 +1,171 @@
+/* Single portal identity. Loaded after presentation styles. */
+/* Structural components consume aliases rather than imposing their own palette. */
+:root, [data-theme] {
+  --brand: #0f766e;
+  --brand-strong: #115e59;
+  --brand-border: #abd0c6;
+  --blue: var(--brand);
+  --teal: #115e59;
+  --ink: #1e293b;
+  --muted: #52616b;
+  --line: #d8e3e0;
+  --page: #f5f8f7;
+  --soft: #eaf5f2;
+  --soft-alt: #f0f7f4;
+  --hover: #115e59;
+  --heading-font: system-ui, -apple-system, "Segoe UI", "Nirmala UI", Arial, sans-serif;
+  --body-font: system-ui, -apple-system, "Segoe UI", "Nirmala UI", Arial, sans-serif;
+  --card-radius: 10px;
+}
+:root, [data-theme] { --home-night: #134e4a; --home-night-end: #115e59; --home-bright: #99f6e4; --home-light-text: #e2f3ef; }
+/* Map all portal surfaces to the selected template. */
+:root,[data-theme]{--portal-navy:var(--home-night);--portal-navy-hover:var(--home-night-end);--portal-link:var(--blue);--portal-text:var(--ink);--portal-muted:var(--muted);--portal-border:var(--line);--portal-surface:var(--soft);--portal-accent:var(--blue);--portal-accent-soft:var(--soft);--surface-subtle:var(--soft);--text-primary:var(--ink);--text-secondary:var(--muted);--border-subtle:var(--line);--radius-panel:var(--card-radius)}
+body{background:var(--page);color:var(--ink);font-family:var(--body-font)}
+body :is(h1,h2,h3,h4){font-family:var(--heading-font)}
+body .government-header{background:var(--page)}
+body .government-header nav>a.active,body .government-header nav>a:hover{background:var(--blue);color:#fff}
+body .government-home .classic-masthead{background:var(--soft);border:1px solid var(--line);border-radius:var(--card-radius);padding:24px}
+body .government-home .classic-column,body .panel,body .tool-card{border-color:var(--line);border-radius:var(--card-radius)}
+body :is(.tool-how,.tools-bottom,.dashboard-actions>a,.resume-keywords,.resume-preview-actions,.settings-form,.information-page){border-color:var(--line)}
+body :is(.tool-detail-heading,.page-intro,.tools-hero,.auth-story,.dashboard-welcome,.admin-heading){background:var(--soft);border:1px solid var(--line);border-radius:var(--card-radius);padding:24px;color:var(--ink)}
+body :is(.tool-detail-heading,.page-intro,.tools-hero,.auth-story,.dashboard-welcome,.admin-heading) :is(h1,h2){color:var(--ink)}
+body :is(.tool-detail-heading,.page-intro,.tools-hero,.auth-story,.dashboard-welcome,.admin-heading) :is(p,li){color:var(--muted)}
+body :is(.auth-switch,.file-drop,.tool-how,.tools-bottom,.resume-preview-actions){background:var(--soft)}
+body :is(.auth-story h1 em,.tools-hero h1 em,.tool-open,.back-link){color:var(--blue)}
+body :is(.secondary,.save-job){color:var(--blue);border-color:var(--line)}
+body :is(input:not([type=checkbox]):not([type=radio]):not([type=range]),select,textarea){font-size:1rem}
+body .new-footer{background:var(--soft);border-color:var(--line)}
+body .new-footer :is(h2,.brand-lockup strong){color:var(--ink)}
+body .new-footer :is(p,a,small,.footer-note,.new-footer-bottom){color:var(--muted)}
+body .new-footer a:hover{color:var(--blue)}
+body .government-home .classic-column li>a:hover{color:var(--hover)}
+body .government-home .classic-view-all:hover{background:var(--soft-alt);color:var(--blue)}
+body .government-home .home-job-tabs button[aria-pressed=true]{border-color:var(--blue)}
+@media(max-width:600px){body :is(.tool-detail-heading,.page-intro,.tools-hero,.auth-story,.dashboard-welcome,.admin-heading){padding:20px 16px}body .government-home .classic-masthead{padding:20px 16px}}
+@media print{body .resume-paper{border-radius:0}}
+
+/* Compact notice board with accessible reading preferences. */
+body .government-home .compact-cards .classic-masthead{padding:16px 20px;text-align:left;background:transparent;border:0;border-bottom:1px solid var(--line);border-radius:0}
+body .government-home .compact-cards .classic-masthead h1{font-size:1.5rem;margin:6px 0}
+body .government-home .compact-cards .classic-masthead>p{font-size:.875rem}
+body .government-home .compact-cards .classic-search{margin:12px 0;max-width:720px}
+body .government-home .compact-cards .classic-shortcuts{gap:6px;margin:12px 0}
+body .government-home .compact-cards .classic-shortcuts a{font-size:.8125rem;min-height:44px;padding:8px;border-top-width:1px}
+body .government-home .compact-cards .classic-columns{gap:12px;align-items:start}
+body .government-home .compact-cards .classic-column{border-radius:8px;border:1px solid var(--line);box-shadow:0 2px 6px #00000004;min-height:0}
+body .government-home .compact-cards .classic-column h2{font-size:1rem;text-align:left;padding:10px 14px;background:var(--soft);color:var(--ink);border-bottom:1px solid var(--line)}
+body .government-home .compact-cards .classic-column h2 a{color:var(--blue);display:flex;align-items:center;min-height:24px}
+body .government-home .compact-cards .classic-column ul{padding:0 14px;list-style:none;flex:none}
+body .government-home .compact-cards .classic-column li{padding:8px 0;line-height:1.45}
+body .government-home .compact-cards .classic-column li>a{font-size:.875rem;display:block;min-height:32px;padding:5px 0;font-weight:600;line-height:1.5}
+body .government-home .compact-cards .classic-column li>small{font-size:.75rem;margin-top:2px}
+body .government-home .compact-cards .classic-column>p{font-size:.8125rem;padding:12px 14px;margin:0;line-height:1.6}
+body .government-home .compact-cards .classic-column .home-job-tabs{padding:8px 10px}
+body .government-home .compact-cards .classic-column .save-job{margin-top:4px;min-height:32px}
+body .government-home .compact-cards .classic-view-all{padding:9px 14px;font-size:.8125rem;min-height:40px;background:#fff;border-top:1px solid var(--line)}
+body .government-home .compact-cards .classic-controls{padding:10px 0}
+body .government-home .compact-cards .hot-job-links>a{padding:12px;border-radius:8px}
+body .government-home .compact-cards .hot-job-links strong{font-size:.875rem}
+@media(max-width:600px){body .government-home .compact-cards .classic-masthead{padding:12px 0}body .government-home .compact-cards .classic-column li>a{min-height:44px}body .government-home .compact-cards .classic-column .save-job{min-height:44px}body .government-home .compact-cards .classic-columns{gap:12px}}
+
+body .government-home .compact-cards .classic-column li>a.save-job{display:inline-flex;min-height:36px;padding:6px 10px;font-size:.75rem}
+body :is(a,button,input,select,textarea):focus-visible{outline:3px solid var(--blue);outline-offset:3px}
+@media(max-width:600px){body .government-home .compact-cards .classic-column li>a.save-job{min-height:44px}}
+
+/* Refined government portal: strong wayfinding, quiet notice surfaces. */
+body .government-header{background:#fff;border-bottom:1px solid var(--line)}
+body .government-header .new-header-inner{padding-top:18px}
+body .government-header .brand-lockup strong{font-size:26px;letter-spacing:-.8px}
+body .government-header nav{border-radius:10px 10px 0 0;margin-top:18px;padding:5px 8px;gap:2px}
+body .government-header nav>a{border-radius:6px;padding:11px 12px}
+body .government-header .header-account .button{border-radius:8px;box-shadow:none}
+body .government-home .compact-cards .classic-masthead{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(240px,1fr);gap:36px;padding:32px;background:var(--portal-navy);color:#fff;border:1px solid var(--portal-navy);border-radius:16px;text-align:left}
+body .government-home .compact-cards .classic-masthead h1{font-size:clamp(1.75rem,3vw,2.6rem);line-height:1.14;letter-spacing:-.04em;color:#fff;margin:12px 0 16px;max-width:640px}
+body .government-home .classic-masthead .eyebrow{color:#99f6e4;font-size:.6875rem;letter-spacing:.12em}
+body .government-home .classic-masthead .portal-hero-copy>p{color:#d1deed;font-size:.9375rem;line-height:1.65;max-width:550px}
+body .government-home .compact-cards .classic-search{padding:5px;background:#fff;border-radius:10px;margin:22px 0 12px;gap:4px;box-shadow:0 6px 18px #00000014}
+body .government-home .classic-search input{border:0;border-radius:6px;color:var(--ink);background:#fff;min-width:0;padding:12px}
+body .government-home .classic-search button{border-radius:7px;white-space:nowrap;padding-inline:18px;min-height:46px}
+body .government-home .classic-masthead .portal-hero-copy>.classic-source{color:#c0cfe1;font-size:.75rem;margin-bottom:0}
+.portal-hero-guide{align-self:center;padding:24px;border:1px solid #ffffff26;border-radius:12px;background:#ffffff08}
+body .portal-hero-guide h2{font-size:1.125rem;color:#fff;letter-spacing:-.02em;margin:10px 0 20px}
+.portal-hero-guide ol{list-style:none;padding:0;margin:0;display:grid;gap:18px}
+.portal-hero-guide li{display:flex;gap:12px;align-items:flex-start}
+.portal-hero-guide li>span{font-size:.6875rem;color:#c7ddff;background:#ffffff0c;border:1px solid #ffffff26;border-radius:7px;padding:6px}
+.portal-hero-guide strong{font-size:.8125rem;color:#f1f6ff}
+body .government-home .portal-hero-guide li p{font-size:.75rem;line-height:1.5;color:#bfcede;margin:4px 0 0}
+.portal-hero-guide>a{display:flex;justify-content:space-between;border-top:1px solid #ffffff26;padding-top:16px;margin-top:20px;color:#c6ddff;font-size:.8125rem;font-weight:600}
+body .government-home .compact-cards .classic-shortcuts{gap:8px;margin:16px 0 24px}
+body .government-home .compact-cards .classic-shortcuts a{display:flex;align-items:center;justify-content:space-between;gap:8px;background:#fff;border:1px solid var(--line);border-radius:9px;min-height:48px;padding:12px 14px;font-size:.8125rem;color:var(--ink)}
+body .government-home .compact-cards .classic-shortcuts a>span:last-child{color:var(--blue);font-size:1rem}
+body .government-home .compact-cards .classic-shortcuts a:hover{background:var(--soft);border-color:var(--blue);text-decoration:none}
+body .government-home .compact-cards .classic-columns{gap:16px}
+body .government-home .compact-cards .classic-column{border-radius:12px;box-shadow:0 3px 12px #1e293b05}
+body .government-home .compact-cards .classic-column h2{background:#fff;padding:14px 16px;border-bottom:1px solid var(--line);position:relative}
+body .government-home .compact-cards .classic-column h2:before{content:"";position:absolute;left:0;top:16px;bottom:16px;width:3px;background:var(--blue);border-radius:0 2px 2px 0}
+body .government-home .compact-cards .classic-column h2 a{color:var(--ink)}
+body .government-home .compact-cards .classic-column ul{padding:0 16px}
+body .government-home .compact-cards .classic-column li{padding:10px 0}
+body .government-home .compact-cards .classic-column li>a:not(.save-job){color:#244d86;font-size:.875rem}
+body .government-home .compact-cards .classic-column li>a:hover{text-decoration:underline;text-underline-offset:3px}
+body .government-home .compact-cards .classic-view-all{background:#f8fafd;text-align:left;padding:12px 16px}
+body .government-home .compact-cards .classic-controls{padding:16px 0}
+body .government-home .government-organizations{border:0;background:#edf2f8;border-radius:9px;padding:12px 16px;gap:12px 20px}
+body .government-home .government-organizations a{text-decoration:none;font-weight:600}
+body .government-home .latest-ticker{border-radius:10px;box-shadow:none}
+body .government-home .compact-cards .hot-job-links>a{background:#fff;border-radius:10px;border-top-width:2px;padding:16px}
+body .government-home .hot-jobs-heading h2{font-size:1.125rem;letter-spacing:-.025em}
+body .government-home .government-about{background:#fff;border:1px solid var(--line);padding:24px;border-radius:12px}
+body .government-home .government-about h2,body .government-home .product-faq h2{font-size:1.25rem;letter-spacing:-.025em}
+body .government-home .product-faq details{background:#fff;border:1px solid var(--line);border-radius:9px;margin:8px 0;padding:0 16px}
+body .government-home .product-faq summary{min-height:48px;padding-block:14px}
+body .government-footer{background:#eef2f7;margin-top:24px}
+@media(max-width:1000px){body .government-header nav>a{padding-inline:8px}body .government-home .compact-cards .classic-masthead{gap:24px;padding:26px}.portal-hero-guide{padding:18px}}
+@media(max-width:850px){body .government-home .compact-cards .classic-masthead{grid-template-columns:1fr}.portal-hero-guide{display:none}body .government-header nav.open{margin-bottom:12px;border-radius:10px}}
+@media(max-width:600px){body main#main{padding-top:16px}body .government-home .compact-cards .classic-masthead{padding:24px 18px;border-radius:12px}body .government-home .compact-cards .classic-masthead h1{font-size:1.85rem}body .government-home .compact-cards .classic-search{background:transparent;padding:0;box-shadow:none;gap:8px}body .government-home .classic-search input{min-height:48px}body .government-home .classic-search button{min-height:48px}body .government-home .compact-cards .classic-shortcuts a{padding:10px 12px;font-size:.8125rem}body .government-home .government-about{padding:20px}body .government-home .compact-cards .classic-column li>a:not(.save-job){font-size:.9375rem}}
+
+/* Action-first hero: shortcuts remain available on phones. */
+body .government-home .compact-cards .classic-masthead{gap:28px;padding:28px;align-items:center}
+.hero-tasks{display:grid;gap:8px;min-width:0}
+.hero-tasks>.eyebrow{margin-bottom:4px}
+.hero-tasks>a{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 15px;border:1px solid #ffffff26;border-radius:9px;background:#ffffff08;color:#fff;text-decoration:none;min-height:64px}
+.hero-tasks>a:hover{background:#ffffff14;border-color:#a8c9f4}
+.hero-tasks strong{display:block;font-size:.875rem;line-height:1.4;color:#fff}
+.hero-tasks small{display:block;font-size:.75rem;line-height:1.5;color:#c0cfe1;margin-top:3px}
+.hero-tasks>a>span:last-child{color:#99f6e4;font-size:1.125rem}
+.hero-exams{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;margin-top:18px}
+.hero-exams>span{font-size:.75rem;color:#c0cfe1;margin-right:2px}
+.hero-exams>a{display:inline-flex;align-items:center;min-height:36px;padding:6px 10px;border:1px solid #ffffff30;border-radius:6px;color:#e2edff;font-size:.75rem;text-decoration:none}
+.hero-exams>a:hover{background:#ffffff14;border-color:#a8c9f4}
+@media(max-width:850px){.hero-tasks{grid-template-columns:1fr 1fr}.hero-tasks>.eyebrow{grid-column:1/-1}body .government-home .compact-cards .classic-masthead{gap:22px}}
+@media(max-width:600px){body .government-home .compact-cards .classic-masthead{padding:22px 18px}.hero-tasks>a{padding:11px;min-height:64px;align-items:flex-start}.hero-tasks strong{font-size:.8125rem}.hero-tasks small{display:none}.hero-exams>a{min-height:44px}.hero-tasks>a>span:last-child{font-size:.875rem}.hero-exams{gap:6px}}
+
+/* Compact search desk keeps notices nearer the top of the page. */
+body .government-home .compact-cards .classic-masthead{grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);padding:20px 24px;gap:24px;border-radius:12px}
+body .government-home .compact-cards .classic-masthead h1{font-size:clamp(1.35rem,2.2vw,1.85rem);line-height:1.2;margin:8px 0 12px;max-width:520px}
+body .government-home .compact-cards .classic-search{display:flex;flex-direction:row;max-width:520px;margin:0;padding:3px;gap:3px;border-radius:8px;background:#fff;box-shadow:none}
+body .government-home .classic-search input{flex:1;width:0;min-width:0;min-height:44px;padding:8px 10px;border-radius:6px}
+body .government-home .classic-search button{flex:none;width:auto;min-height:44px;padding:8px 14px;border-radius:6px}
+body .government-home .classic-masthead .portal-hero-copy>.classic-source{font-size:.75rem;line-height:1.5;margin:9px 0 0}
+body .hero-tasks{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+body .hero-tasks>.eyebrow{grid-column:1/-1;margin:0 0 2px}
+body .hero-tasks>a{min-height:52px;padding:10px;gap:6px;align-items:center}
+body .hero-tasks strong{font-size:.8125rem}
+body .hero-tasks small{display:none}
+@media(max-width:850px){body .government-home .compact-cards .classic-masthead{grid-template-columns:1fr;gap:16px}body .government-home .compact-cards .classic-search{max-width:none}}
+@media(max-width:600px){body .government-home .compact-cards .classic-masthead{padding:18px 16px;gap:14px}body .government-home .compact-cards .classic-masthead h1{font-size:1.35rem}body .hero-tasks>a{min-height:44px}body .hero-tasks>.eyebrow{display:none}}
+
+/* Editorial notice desk: one heading, one search, no competing hero panels. */
+body .government-home .compact-cards .classic-masthead.notice-desk{display:grid;grid-template-columns:minmax(0,1fr) minmax(260px,340px);align-items:center;gap:24px;padding:12px 0 22px;background:transparent;border:0;border-bottom:1px solid var(--line);border-radius:0;color:var(--ink)}
+body .government-home .notice-desk .eyebrow{color:var(--muted);font-size:.6875rem;letter-spacing:.13em}
+body .government-home .compact-cards .notice-desk h1{font-size:clamp(1.35rem,2.1vw,1.8rem);max-width:none;color:var(--ink);letter-spacing:-.035em;line-height:1.25;margin:7px 0}
+body .government-home .notice-desk .notice-desk-heading p{font-size:.8125rem;line-height:1.5;color:var(--muted);margin:0}
+body .government-home .compact-cards .notice-desk .classic-search{width:100%;margin:0;padding:3px;border:1px solid #b7c5d6;border-radius:9px;background:#fff;box-shadow:0 2px 5px #1e293b04}
+body .government-home .notice-desk .classic-search button{display:grid;place-items:center;width:44px;min-width:44px;padding:0;background:var(--portal-navy)}
+body .government-home .notice-desk .classic-search button:hover{background:var(--blue)}
+body .government-home .notice-desk .classic-search input{padding-inline:10px}
+body .government-home .compact-cards .classic-shortcuts{grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:16px 0}
+body .government-home .compact-cards .classic-shortcuts a{background:#fff;min-height:44px;padding:10px 12px}
+@media(min-width:1100px){body .government-home .compact-cards .classic-shortcuts{grid-template-columns:repeat(8,minmax(0,1fr))}body .government-home .compact-cards .classic-shortcuts a{font-size:.75rem;gap:4px}body .government-home .compact-cards .classic-shortcuts a>span:last-child{display:none}}
+@media(max-width:850px){body .government-home .compact-cards .classic-masthead.notice-desk{grid-template-columns:1fr;gap:14px;padding:8px 0 18px}body .government-home .compact-cards .notice-desk .classic-search{max-width:480px}}
+@media(max-width:600px){body .government-home .compact-cards .classic-shortcuts{grid-template-columns:repeat(2,minmax(0,1fr))}body .government-home .compact-cards .notice-desk h1{font-size:1.4rem}body .government-home .compact-cards .notice-desk .classic-search{max-width:none}}

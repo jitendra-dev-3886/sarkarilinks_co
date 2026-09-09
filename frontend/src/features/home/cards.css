@@ -1,0 +1,33 @@
+/* One card system for the public homepage, independent of data and routing. */
+.government-home { --home-card-radius: 12px; --home-card-shadow: 0 2px 8px #172b4505; }
+body .government-home :is(.notice-desk,.latest-ticker,.hot-jobs,.government-organizations,.classic-controls,.classic-column,.return-visit,.government-about,.product-faq) {
+  background:#fff; border:1px solid var(--line); border-radius:var(--home-card-radius); box-shadow:var(--home-card-shadow); min-width:0;
+}
+body .government-home .compact-cards .classic-masthead.notice-desk { padding:20px; background:#fff; border:1px solid var(--line); border-radius:var(--home-card-radius); }
+body .government-home .compact-cards .classic-shortcuts { gap:10px; margin:16px 0; }
+body .government-home .compact-cards .classic-shortcuts a { border-radius:var(--home-card-radius); box-shadow:var(--home-card-shadow); min-height:50px; }
+body .government-home .home-highlights { display:grid; gap:16px; margin:16px 0; }
+body .government-home .latest-ticker { margin:0; padding:10px 12px; }
+body .government-home .hot-jobs { padding:18px; margin:0; }
+body .government-home .hot-jobs-heading { padding-bottom:12px; border-bottom:1px solid var(--line); }
+body .government-home .compact-cards .hot-job-links>a { background:var(--page); box-shadow:none; }
+body .government-home nav.government-organizations { padding:12px 16px; margin:0 0 12px; }
+body .government-home .government-organizations a { padding:6px 10px; min-height:36px; display:inline-flex; align-items:center; border-radius:7px; background:var(--soft); }
+body .government-home .government-organizations a:hover { background:var(--line); }
+body .government-home .compact-cards .classic-controls { padding:12px 16px; margin:0 0 16px; }
+body .government-home .compact-cards .classic-column { border-radius:var(--home-card-radius); box-shadow:var(--home-card-shadow); }
+body .government-home .return-visit { padding:20px; margin:16px 0 0; }
+.home-information-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:16px; align-items:start; }
+body .government-home .home-information-grid :is(.government-about,.product-faq) { margin:0; padding:20px; max-width:none; }
+body .government-home .home-information-grid h2 { margin-top:0; font-size:1.125rem; line-height:1.4; }
+body .government-home .home-information-grid .government-about p { font-size:.8125rem; line-height:1.75; }
+body .government-home .home-information-grid .product-faq details { border:0; border-top:1px solid var(--line); border-radius:0; box-shadow:none; padding:0; margin:0; }
+body .government-home .home-information-grid .product-faq summary { font-size:.8125rem; line-height:1.5; }
+@media(max-width:850px) { .home-information-grid { grid-template-columns:1fr; } }
+@media(max-width:600px) {
+  body .government-home .compact-cards .classic-masthead.notice-desk { padding:16px; }
+  body .government-home :is(.hot-jobs,.return-visit) { padding:16px; }
+  body .government-home .compact-cards .classic-controls { padding:12px; gap:10px; }
+  body .government-home .government-organizations a { min-height:44px; }
+  body .government-home .home-information-grid :is(.government-about,.product-faq) { padding:16px; }
+}

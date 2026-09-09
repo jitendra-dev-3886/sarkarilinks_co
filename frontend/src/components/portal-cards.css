@@ -1,0 +1,50 @@
+/* Shared card presentation for public, member and staff screens. */
+:root { --portal-card-radius:12px; --portal-card-shadow:0 2px 8px #172b4505; }
+body main#main :is(.panel,.tool-card,.page-intro,.tool-detail-heading,.tools-hero,.auth-story,.dashboard-welcome,.workspace-sidebar,.tools-bottom,.tool-how,.empty-workspace,.loading-state,.admin-heading) {
+  background:#fff; border:1px solid var(--line); border-radius:var(--portal-card-radius); box-shadow:var(--portal-card-shadow); min-width:0;
+}
+body main#main :is(.page-intro,.tool-detail-heading,.tools-hero,.auth-story,.dashboard-welcome,.admin-heading) { padding:22px; margin-bottom:16px; }
+body main#main :is(.page-intro,.tool-detail-heading,.tools-hero,.auth-story,.dashboard-welcome,.admin-heading) h1 { font-size:clamp(1.5rem,2.6vw,2rem); color:var(--ink); line-height:1.25; letter-spacing:-.035em; }
+body main#main :is(.page-intro,.tools-hero,.auth-story,.dashboard-welcome) p { color:var(--muted); font-size:.9375rem; line-height:1.65; }
+body main#main .panel { padding:20px; }
+body main#main :is(.listing-filters,.tool-tabs,.member-tabs) { margin-block:16px; }
+body main#main :is(.tool-tabs,.member-tabs) { display:flex; flex-wrap:wrap; gap:8px; padding:10px; background:#fff; border:1px solid var(--line); border-radius:var(--portal-card-radius); }
+body main#main :is(.tool-tabs,.member-tabs) button { min-height:44px; border-radius:7px; }
+body main#main :is(.feed,.member-job-grid,.tool-grid,.profile-grid,.dashboard-actions) { gap:16px; }
+body main#main .feed { display:grid; }
+body main#main .feed article { border:1px solid var(--line); border-radius:10px; padding:16px; background:#fff; min-width:0; }
+body main#main .feed article:hover { border-color:#9cb6d9; background:#f8fafd; }
+body main#main .feed .item-title { font-size:1rem; line-height:1.5; }
+body main#main :is(.feed article,.member-job,.tool-card) p { font-size:.875rem; line-height:1.65; }
+body main#main .panel-heading { gap:12px; flex-wrap:wrap; padding-bottom:16px; }
+body main#main .panel-heading h2 { font-size:1.125rem; }
+body main#main .detail { padding:24px; }
+body main#main :is(.detail-facts>div,.notice-sections>section,.full-notice,.information-page>section,.information-page>details,.site-directory>section) { padding:16px; border:1px solid var(--line); border-radius:10px; background:#fff; min-width:0; }
+body main#main :is(.notice-sections,.site-directory) { display:grid; gap:16px; }
+body main#main .detail-facts>div { background:var(--page); }
+body main#main :is(.notice-sections h2,.information-page h2) { margin-top:0; font-size:1.125rem; }
+body main#main .information-page>section { margin-block:16px; }
+body main#main .workspace-frame { gap:16px; align-items:start; }
+body main#main .workspace-sidebar { padding:16px; }
+body main#main .workspace-sidebar nav a { min-height:44px; border-radius:7px; }
+body main#main :is(.dashboard-actions>a,.workspace-plan) { border:1px solid var(--line); border-radius:10px; padding:16px; background:#fff; box-shadow:var(--portal-card-shadow); }
+body main#main .workspace-plan { background:var(--soft); }
+body main#main :is(.empty-workspace,.loading-state) { padding:24px; }
+body main#main :is(.auth-layout,.profile-grid) { gap:16px; align-items:start; }
+body main#main .member-auth { padding:24px; }
+body main#main :is(.tool-card,.tools-bottom,.tool-how) { padding:20px; }
+body main#main .tool-card:hover { transform:none; border-color:#9cb6d9; box-shadow:0 4px 12px #172b4509; }
+body main#main .file-drop { border-radius:10px; background:var(--page); }
+body main#main :is(.workspace-body,.tool-detail,.admin-panel,.filter-controls>label) { min-width:0; }
+body main#main :is(.item-title,.detail h1,.body-text) { overflow-wrap:anywhere; }
+body main#main .filter-controls { gap:12px; }
+body main#main .pagination { gap:12px; flex-wrap:wrap; }
+@media(max-width:600px) {
+  body main#main :is(.panel,.page-intro,.tool-detail-heading,.tools-hero,.auth-story,.dashboard-welcome,.admin-heading,.member-auth,.detail,.tool-card,.tools-bottom,.tool-how) { padding:16px; }
+  body main#main :is(.feed article,.notice-sections>section,.information-page>section) { padding:14px; }
+  body main#main .filter-controls { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  body main#main .filter-controls select { width:100%; min-width:0; }
+  body main#main .panel-heading label { max-width:100%; }
+}
+/* Exported resumes keep their selected document styling. */
+@media print { body main#main .resume-paper { box-shadow:none; border-radius:0; } }

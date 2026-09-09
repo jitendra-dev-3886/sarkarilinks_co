@@ -1,0 +1,177 @@
+/* Tool directory cards: defined header, readable body, predictable footer. */
+body main#main .tools-directory .tools-hero { display:grid; grid-template-columns:minmax(0,1fr) minmax(240px,340px); align-items:center; gap:24px; padding:22px 24px; }
+body main#main .tools-directory .tools-hero h1 { font-size:clamp(1.4rem,2.4vw,1.85rem); margin:6px 0 8px; }
+body .tools-directory .catalog-intro p { margin:0; font-size:.875rem; max-width:560px; }
+body .tools-directory .tool-search { margin:0; max-width:none; }
+body .tools-directory .tool-search input { min-height:46px; border:1px solid var(--brand-border); border-radius:8px; background:var(--page); }
+body main#main .tools-directory .tool-tabs { padding:8px; gap:6px; border-radius:10px; }
+body main#main .tools-directory .tool-tabs button { border:0; background:transparent; color:var(--muted); font-size:.8125rem; }
+body main#main .tools-directory .tool-tabs button.selected { background:var(--portal-navy); color:#fff; }
+body main#main .tools-directory .tool-tabs button:hover:not(.selected) { background:var(--soft); color:var(--ink); }
+body main#main .tool-card.catalog-card { display:flex; flex-direction:column; padding:0; gap:0; border:1px solid var(--line); border-radius:12px; overflow:hidden; text-decoration:none; background:#fff; box-shadow:0 2px 6px #172b4504; }
+body main#main .tool-card.catalog-card:hover { border-color:var(--brand-border); box-shadow:0 5px 16px #172b450a; }
+.catalog-card-header { display:flex; align-items:center; gap:12px; padding:18px; background:var(--soft); border-bottom:1px solid var(--line); min-height:100px; }
+.catalog-card-header>div { min-width:0; }
+.catalog-icon { display:grid; place-items:center; width:44px; height:44px; flex:none; border:1px solid var(--line); border-radius:10px; color:var(--brand-strong); background:#fff; }
+.catalog-category { display:block; color:var(--muted); font-size:.6875rem; line-height:1.5; margin-bottom:4px; font-weight:600; }
+body main#main .catalog-card h3 { font-size:1rem!important; line-height:1.35; letter-spacing:-.02em; margin:0; color:var(--ink); overflow-wrap:anywhere; }
+.catalog-card-body { padding:16px 18px; flex:1; }
+body main#main .catalog-card .catalog-card-body p { font-size:.8125rem!important; line-height:1.7; color:var(--muted); margin:0; }
+.catalog-card-footer { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; border-top:1px solid #e8edf4; padding:12px 18px; min-height:52px; }
+.catalog-processing { color:var(--muted); font-size:.6875rem; }
+.catalog-open { display:inline-flex; align-items:center; gap:8px; color:var(--blue); font-size:.8125rem; font-weight:650; }
+body .tool-card.catalog-card:hover .catalog-open { text-decoration:underline; text-underline-offset:3px; }
+@media(max-width:850px) { body main#main .tools-directory .tools-hero { grid-template-columns:1fr; gap:16px; } }
+@media(max-width:600px) { body main#main .tools-directory .tools-hero { padding:18px; } .catalog-card-header { min-height:88px; padding:16px; } .catalog-card-body { padding:14px 16px; } .catalog-card-footer { padding:12px 16px; } }
+
+/* Inner tool screens use the same header/body card structure. */
+body main#main .tool-detail .tool-detail-heading { background:var(--soft); padding:22px; gap:16px; align-items:center; border-radius:12px; border:1px solid var(--line); }
+body .tool-detail-heading .tool-icon { flex:none; }
+body main#main .tool-detail .tool-detail-heading h1 { font-size:clamp(1.5rem,2.5vw,2rem); margin:8px 0; }
+body .tool-detail .tool-detail-heading p { font-size:.875rem; line-height:1.7; max-width:780px; margin-bottom:0; }
+body .tool-detail .tool-workspace { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.15fr); gap:16px; align-items:start; }
+body main#main .tool-detail :is(.tool-controls,.tool-output) { padding:20px; min-width:0; border-radius:12px; }
+.tool-panel-heading { display:flex; align-items:center; gap:12px; margin:-20px -20px 20px; padding:16px 20px; border-bottom:1px solid var(--line); background:var(--soft); border-radius:12px 12px 0 0; }
+.tool-step { display:grid; place-items:center; flex:none; width:34px; height:34px; border:1px solid var(--line); background:#fff; border-radius:8px; color:var(--brand-strong); font-size:.75rem; font-weight:600; }
+body .tool-panel-heading h2 { font-size:1rem; line-height:1.4; margin:0; }
+body .tool-panel-heading p { font-size:.75rem; color:var(--muted); margin:3px 0 0; line-height:1.5; }
+body .tool-detail .file-drop { padding:24px 16px; background:#f8fafd; border-color:#a9bed9; }
+body .tool-detail .tool-empty { min-height:250px; padding:24px 12px; }
+body .tool-detail .tool-empty h2 { font-size:1.125rem; }
+body .tool-detail .tool-empty p { font-size:.875rem; }
+body .tool-detail .tool-empty>span { color:#7b96ba; background:var(--soft); border-radius:12px; }
+body .tool-detail .file-name { overflow-wrap:anywhere; }
+.tool-guide-grid { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:16px; margin:20px 0 28px; align-items:start; }
+body main#main .tool-guide-grid :is(.tool-how,.product-faq) { margin:0; padding:20px; max-width:none; border:1px solid var(--line); border-radius:12px; background:#fff; }
+body .tool-guide-grid h2 { font-size:1.0625rem; line-height:1.4; margin-top:0; }
+body .tool-guide-grid :is(p,li,summary) { font-size:.8125rem; line-height:1.75; }
+body .tool-guide-grid li { padding:5px 0; }
+body .tool-guide-grid summary { min-height:44px; padding-block:12px; }
+body main#main .tool-detail .calculator { max-width:760px; margin-inline:auto; padding:24px; }
+body .tool-detail .calculator h2 { font-size:1.125rem; }
+body .tool-detail .calculator output:not(:empty) { display:block; padding:16px; border:1px solid #cfdeef; border-radius:8px; background:var(--soft); color:var(--ink); line-height:1.6; }
+body .tool-detail .download-item { border:1px solid var(--line); border-radius:10px; padding:16px; margin-top:12px; }
+body .tool-detail .resume-editor { border-radius:12px; }
+@media(max-width:850px) { body .tool-detail .tool-workspace,.tool-guide-grid { grid-template-columns:1fr; } }
+@media(max-width:600px) {
+ body main#main .tool-detail .tool-detail-heading { padding:16px; gap:12px; align-items:flex-start; }
+ body main#main .tool-detail :is(.tool-controls,.tool-output) { padding:16px; }
+ .tool-panel-heading { margin:-16px -16px 16px; padding:14px 16px; }
+ body .tool-detail .tool-empty { min-height:200px; }
+ body main#main .tool-guide-grid :is(.tool-how,.product-faq) { padding:16px; }
+}
+
+/* Resume workspace: grouped editor, preview settings and account actions. */
+body .tool-detail .resume-layout { gap:20px; align-items:start; }
+body main#main .tool-detail .resume-editor { padding:20px; }
+body .resume-import { margin:0 0 20px; padding:0 14px 14px; border:1px solid var(--line); background:#f8fafd; border-radius:10px; }
+body .resume-import:not([open]) { padding-bottom:0; }
+.resume-import summary { min-height:48px; padding:14px 0; font-size:.875rem; font-weight:600; cursor:pointer; }
+.resume-import summary span { font-size:.6875rem; font-weight:400; color:var(--muted); margin-left:8px; }
+body .resume-import h2 { font-size:1rem; margin-top:0; }
+body .resume-import p { font-size:.8125rem; line-height:1.7; }
+.resume-field-group { min-width:0; border:1px solid var(--line); border-radius:10px; margin:0 0 20px; padding:16px; }
+.resume-field-group legend { padding:0 6px; font-size:.875rem; font-weight:650; color:var(--ink); }
+body .resume-field-group label { text-transform:capitalize; font-size:.8125rem; }
+body .resume-field-group :is(input,textarea,select) { margin-top:6px; border-radius:7px; border-color:var(--brand-border); }
+.resume-save-panel { border-top:1px solid var(--line); padding-top:8px; }
+.resume-save-panel p { font-size:.8125rem; line-height:1.7; color:var(--muted); }
+body .resume-preview-wrap { min-width:0; }
+body .resume-preview-actions { margin:0; padding:16px 18px; border:1px solid var(--line); border-radius:12px 12px 0 0; background:var(--soft); gap:12px; }
+body .resume-preview-actions h2 { font-size:1rem; margin:4px 0 0; }
+body .resume-preview-actions button { font-size:.8125rem; min-height:44px; }
+.resume-preview-settings { padding:16px 18px; background:#fff; border:1px solid var(--line); border-top:0; border-radius:0 0 12px 12px; margin-bottom:16px; }
+body .resume-preview-settings .resume-display-controls { margin:0; padding:0; display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.resume-preview-settings label { font-size:.8125rem; min-width:0; }
+.resume-preview-settings select { width:100%; min-width:0; }
+.resume-preview-note { font-size:.75rem; line-height:1.6; color:var(--muted); margin:12px 0 0; }
+body .resume-keywords h2 { font-size:1.0625rem; margin-top:0; }
+body .resume-keywords p { font-size:.8125rem; line-height:1.7; }
+@media(max-width:1000px) { body .tool-detail .resume-layout { grid-template-columns:1fr; } }
+@media(max-width:600px) { body main#main .tool-detail .resume-editor { padding:16px; } .resume-field-group { padding:12px; } body .resume-preview-actions { flex-wrap:wrap; padding:14px; } .resume-preview-settings { padding:14px; } }
+@media print { .resume-preview-settings { display:none!important; } }
+
+.resume-choice { border:0; padding:0; margin:0 0 16px; min-width:0; }
+.resume-choice legend { font-size:.8125rem; font-weight:600; margin-bottom:8px; padding:0; }
+.resume-segments { display:flex; gap:4px; padding:4px; background:#edf2f8; border:1px solid var(--line); border-radius:9px; flex-wrap:wrap; }
+body .resume-segments label { display:flex; align-items:center; justify-content:center; flex:1 1 72px; position:relative; min-height:44px; margin:0; padding:8px; border:1px solid transparent; border-radius:6px; cursor:pointer; font-size:.8125rem; color:var(--muted); }
+body .resume-segments label.is-selected { background:#fff; border-color:#a9bfdc; color:var(--blue); box-shadow:0 1px 3px #172b450a; font-weight:650; }
+.resume-segments label:hover { background:#fff; }
+body .resume-segments input[type=radio] { position:absolute; opacity:0; width:1px; height:1px; margin:0; }
+.resume-segments label:has(input:focus-visible) { outline:3px solid var(--blue); outline-offset:2px; }
+body .resume-preview-settings .resume-display-controls { grid-template-columns:1fr; gap:0; }
+.resume-preview-settings .resume-choice:last-child { margin-bottom:0; }
+
+body main#main .resume-choice { min-width:0; margin-bottom:12px; }
+body main#main .classic-controls .resume-choice,body main#main .panel-heading .resume-choice { margin:0; }
+body main#main .classic-controls .resume-segments label { min-height:44px; padding:6px 10px; }
+body main#main .resume-choice:disabled label { cursor:not-allowed; opacity:.6; }
+body main#main .resume-choice .resume-segments label { text-transform:none; }
+body main#main select { min-height:44px; max-width:100%; border-radius:8px; }
+
+/* A consistent input/result workspace for all three calculators. */
+.calculator-workspace { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:20px; align-items:start; }
+body main#main .calculator-workspace>.panel { padding:20px; min-width:0; }
+.calculator-input form { display:grid; gap:18px; }
+.calculator-input form>label { display:grid; gap:8px; margin:0; font-size:.875rem; font-weight:600; }
+.calculator-input input { width:100%; min-width:0; min-height:48px; margin:0; border:1px solid var(--brand-border); border-radius:8px; background:#fff; padding:10px 12px; }
+.calculator-actions { display:flex; flex-wrap:wrap; gap:10px; padding-top:4px; }
+.calculator-actions button { min-height:44px; border-radius:8px; }
+.calculator-actions button:first-child { flex:1; }
+.calculator-result-body { min-height:220px; display:flex; flex-direction:column; justify-content:center; align-items:flex-start; padding:12px 4px 4px; }
+.calculator-result-body>.eyebrow { font-size:.6875rem; color:var(--muted); }
+body .calculator-result output { display:block; font-size:clamp(1.4rem,2.4vw,2rem); font-weight:650; letter-spacing:-.025em; line-height:1.45; color:var(--ink); padding:0; margin:14px 0; background:transparent; border:0; overflow-wrap:anywhere; }
+.calculator-result output:empty { margin:0; }
+.calculator-result-body h3 { font-size:1.125rem; margin:14px 0 8px; }
+.calculator-result-body>p { color:var(--muted); font-size:.875rem; line-height:1.7; margin:0; }
+body .calculator-result-body>.calculator-result-note { border-top:1px solid var(--line); padding-top:16px; margin-top:24px; font-size:.75rem; width:100%; }
+body .calculator-result.has-error output { color:#a42626; font-size:1rem; font-weight:600; }
+@media(max-width:850px) { .calculator-workspace { grid-template-columns:1fr; gap:16px; } .calculator-result-body { min-height:160px; } }
+@media(max-width:600px) { body main#main .calculator-workspace>.panel { padding:16px; } .calculator-actions button { flex:1; } }
+
+.pdf-file-list { list-style:none; padding:0; margin:16px 0; display:grid; gap:10px; }
+.pdf-file-list li { padding:12px; border:1px solid var(--line); background:var(--page); border-radius:8px; }
+.pdf-file-list strong { display:block; overflow-wrap:anywhere; font-size:.8125rem; }
+.pdf-file-list small { display:block; font-size:.75rem; color:var(--muted); margin:4px 0 8px; }
+.pdf-file-actions { display:flex; gap:6px; flex-wrap:wrap; }
+body .pdf-file-actions button { min-height:44px; padding:6px 10px; font-size:.75rem; }
+.pdf-workspace .pdf-help { font-size:.8125rem; line-height:1.65; color:var(--muted); }
+.pdf-consent { display:flex; gap:10px; align-items:flex-start; font-size:.8125rem; line-height:1.6; }
+.pdf-consent input { flex:none; width:18px; height:18px; }
+.pdf-workspace progress { width:100%; accent-color:var(--blue); }
+.pdf-workspace figcaption { font-size:.75rem; color:var(--muted); padding:8px; }
+
+.media-platforms { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:20px; }
+.media-platforms span { padding:6px 10px; background:var(--soft); border:1px solid var(--line); border-radius:6px; font-size:.75rem; color:var(--muted); }
+.media-workspace form { display:grid; gap:18px; }
+.media-workspace form>label { display:grid; gap:8px; font-size:.875rem; margin:0; }
+.media-workspace form>label small { color:var(--muted); font-weight:400; font-size:.75rem; }
+body .media-workspace .media-permission { display:flex; align-items:flex-start; font-size:.8125rem; line-height:1.6; }
+.media-permission input { width:18px; height:18px; flex:none; margin-top:3px; }
+.media-signin { background:var(--page); border:1px solid var(--line); border-radius:10px; padding:16px; }
+.media-signin strong { font-size:.875rem; }
+.media-signin p { font-size:.8125rem; line-height:1.6; color:var(--muted); }
+.media-signin .button,.media-submit { min-height:44px; }
+.media-limits { border-top:1px solid var(--line); margin-top:20px; padding-top:8px; }
+.media-limits summary { min-height:44px; padding:12px 0; font-size:.8125rem; cursor:pointer; }
+.media-limits ul { padding-left:20px; margin:0; font-size:.75rem; line-height:1.8; color:var(--muted); }
+.media-history-toolbar { display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap; align-items:center; }
+.media-history-toolbar>span { font-size:.75rem; color:var(--muted); }
+.media-history-toolbar button { font-size:.75rem; min-height:44px; }
+.media-empty svg { color:#7896bb; }
+.media-empty h3 { font-size:1rem; }
+.media-job-top { display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px; font-size:.6875rem; color:var(--muted); align-items:center; }
+.media-job-status { display:inline-flex; padding:5px 8px; border-radius:5px; background:var(--soft); color:var(--brand-strong); font-weight:600; }
+.media-job-status.status-ready { background:#e9f6ee; color:#21613c; }
+.media-job-status.status-failed,.media-job-status.status-expired { background:#fff0ed; color:#963721; }
+body .media-job h3 { font-size:.9375rem; line-height:1.5; margin:12px 0 6px; }
+.media-source-url { overflow-wrap:anywhere; font-size:.75rem; line-height:1.6; color:var(--muted); }
+.media-job-note { font-size:.75rem; color:var(--muted); line-height:1.6; }
+
+body .media-workspace form>label.media-permission { display:grid; grid-template-columns:18px minmax(0,1fr); align-items:start; gap:10px; }
+body .media-workspace .media-permission input[type=checkbox] { width:18px; height:18px; min-height:0; padding:0; margin:2px 0 0; }
+.media-permission>span { min-width:0; line-height:1.6; }
+
+body .pdf-workspace form>label.pdf-consent { display:grid; grid-template-columns:18px minmax(0,1fr); align-items:start; gap:10px; }
+body .pdf-workspace .pdf-consent input[type=checkbox] { width:18px; height:18px; min-height:0; padding:0; margin:2px 0 0; }
+.pdf-consent>span { min-width:0; line-height:1.6; }

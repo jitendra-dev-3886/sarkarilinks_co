@@ -16,6 +16,7 @@
 .admin-panel, .admin-gate { padding: 25px; }
 .admin-error { padding: 12px; border-radius: 6px; background: #fff0f0; color: #a12828 !important; font-size: 13px; }
 .admin-success { padding: 12px; background: #e9f8ef; color: #23663a !important; border-radius: 6px; font-size: 13px; }
+.admin-heading-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 .admin-table-wrap { overflow-x: auto; }
 .admin-panel table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; }
 .admin-panel th { color: #60718e; background: #f6f8fc; font-weight: 600; }

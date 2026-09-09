@@ -1,3 +1,4 @@
+import Deadline from '../../components/Deadline';
 import { useEffect, useRef, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
@@ -35,7 +36,7 @@ export default function HomeHighlights({ locale = 'en' }: { locale?: string }) {
         {latest.isPending && <span>Loading updates...</span>}
         {latest.error && <span role="alert">Updates unavailable. <button className="text-button" onClick={() => void latest.refetch()}>Retry updates</button></span>}
         {latest.data?.data.length === 0 && <span>No published updates yet.</span>}
-        <div className="ticker-links">{latest.data?.data.map(item => <Link key={item.id} lang={item.locale} to={`/${item.type}/${item.slug}?locale=${item.locale}`}><span>{categories.find(([type]) => type === item.type)?.[1] ?? 'Update'}</span>{item.title}</Link>)}</div>
+        <div className="ticker-links">{latest.data?.data.map(item => <Link key={item.id} lang={item.locale} to={`/${item.type}/${item.slug}?locale=${item.locale}`}><span>{categories.find(([type]) => type === item.type)?.[1] ?? 'Update'}</span>{item.title}{item.closing_date && <Deadline value={item.closing_date} />}</Link>)}</div>
       </div>
       {!!latest.data?.data.length && <button className="secondary ticker-pause" aria-pressed={paused} onClick={() => setPaused(value => !value)}>{paused ? 'Resume scrolling' : 'Pause scrolling'}</button>}
     </section>
@@ -43,7 +44,7 @@ export default function HomeHighlights({ locale = 'en' }: { locale?: string }) {
       {jobs.isPending && <p role="status">Loading jobs...</p>}
       {jobs.error && <p role="alert">Jobs unavailable. <button className="text-button" onClick={() => void jobs.refetch()}>Retry hot jobs</button></p>}
       {jobs.data && !hot.length && <p className="hot-jobs-empty">No recent open job notices yet.</p>}
-      <div className="hot-job-links">{hot.map(item => <Link key={item.id} lang={item.locale} to={`/jobs/${item.slug}?locale=${item.locale}`}><span>{item.organization}</span><strong>{item.title}</strong><small>{item.closing_date ? `Closes ${item.closing_date.slice(0, 10)}` : 'Check notice for application dates'} &rarr;</small></Link>)}</div>
+      <div className="hot-job-links">{hot.map(item => <Link key={item.id} lang={item.locale} to={`/jobs/${item.slug}?locale=${item.locale}`}><span>{item.organization}</span><strong>{item.title}</strong>{item.closing_date ? <Deadline value={item.closing_date} /> : <small>Check notice for application dates</small>}</Link>)}</div>
     </section>
   </div>;
 }

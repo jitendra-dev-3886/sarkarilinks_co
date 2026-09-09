@@ -140,6 +140,15 @@ class SeoController extends Controller
         $appearance = AppearanceController::current();
         $html = str_replace('<html lang="en">', '<html lang="'.$locale.'" data-theme="'.e($appearance['theme']).'" data-text-size="'.e($appearance['text_size']).'" data-home-layout="'.e($appearance['home_layout']).'">', $html);
         $head = '<link rel="canonical" href="'.e($canonical).'"><meta name="robots" content="'.($private || $status === 404 ? 'noindex,follow' : 'index,follow').'"><meta property="og:title" content="'.e($title).'"><meta property="og:description" content="'.e(mb_substr($description, 0, 250)).'"><meta property="og:url" content="'.e($canonical).'"><meta property="og:type" content="website">';
+        $head .= '<meta name="twitter:card" content="summary"><meta name="twitter:title" content="'.e($title).'"><meta name="twitter:description" content="'.e(mb_substr($description, 0, 250)).'">';
+        if (! $private && $status === 200 && $parts[0] === 'tools' && count($parts) === 2) {
+            $schema = ['@context' => 'https://schema.org', '@type' => 'BreadcrumbList', 'itemListElement' => [
+                ['@type' => 'ListItem', 'position' => 1, 'name' => 'Home', 'item' => $this->origin().'/'],
+                ['@type' => 'ListItem', 'position' => 2, 'name' => 'Tools', 'item' => $this->origin().'/tools'],
+                ['@type' => 'ListItem', 'position' => 3, 'name' => $title, 'item' => $canonical],
+            ]];
+            $head .= '<script data-route-schema type="application/ld+json">'.json_encode($schema, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT).'</script>';
+        }
         $nav = '<header><a href="/">SarkariLinks</a><nav aria-label="Main navigation">';
         foreach (self::CATEGORIES as $slug => $label) {
             $nav .= '<a href="/'.$slug.'">'.e($label).'</a> ';

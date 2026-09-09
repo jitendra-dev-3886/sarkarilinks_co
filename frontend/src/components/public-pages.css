@@ -1,0 +1,95 @@
+/* Public inner pages share the homepage palette, with layouts for reading and discovery. */
+.public-breadcrumb { display:flex; gap:10px; flex-wrap:wrap; align-items:center; font-size:.8125rem; color:var(--muted); margin:0 0 14px; }
+.public-breadcrumb a { color:var(--blue); min-height:32px; display:inline-flex; align-items:center; }
+body main#main .public-listing .page-intro { display:grid; grid-template-columns:minmax(0,1fr) minmax(260px,420px); gap:24px; align-items:center; padding:24px; }
+body main#main .public-listing .page-intro h1 { margin:6px 0; }
+body main#main .public-listing .page-intro p { margin:0; font-size:.875rem; }
+body .public-listing .page-intro .search { width:100%; margin:0; padding:4px; border:1px solid var(--line); border-radius:9px; box-shadow:none; background:var(--page); display:flex; gap:4px; }
+body .public-listing .search input { min-width:0; width:0; flex:1; border:0; background:transparent; padding:10px; }
+body .public-listing .search button { font-size:.8125rem; min-height:44px; border-radius:6px; padding:10px 12px; }
+.public-listing-layout { display:grid; grid-template-columns:240px minmax(0,1fr); gap:20px; align-items:start; }
+.public-filter-sidebar { min-width:0; }
+body main#main .public-filter-sidebar .listing-filters { margin:0; padding:18px; }
+body main#main .public-filter-sidebar .filter-controls { display:grid; grid-template-columns:1fr; gap:14px; }
+.filter-heading { margin:0 0 18px; font-size:.9375rem; letter-spacing:-.015em; }
+body .public-filter-sidebar .filter-controls label { font-size:.8125rem; color:var(--muted); }
+body .public-filter-sidebar select { width:100%; min-height:44px; background:#fff; border-color:var(--line); border-radius:7px; }
+.source-guidance { margin-top:14px; padding:18px; border:1px solid var(--line); border-radius:12px; background:var(--soft); font-size:.8125rem; line-height:1.7; }
+.source-guidance strong { color:var(--ink); }
+.source-guidance p { color:var(--muted); margin:6px 0 12px; }
+.source-guidance a { font-weight:600; }
+body main#main .public-results { padding:20px; }
+body main#main .public-results .panel-heading { border-bottom:1px solid var(--line); margin-bottom:16px; align-items:center; }
+body .public-results .panel-heading label { display:flex; gap:8px; align-items:center; font-size:.8125rem; }
+body main#main .public-results .feed article { padding:20px; gap:12px; border-left:3px solid var(--brand-border); }
+body main#main .public-results .feed article:hover { border-left-color:var(--blue); }
+body main#main .public-results .feed .item-title { display:block; font-size:1.0625rem; color:var(--ink); font-weight:650; margin-top:7px; }
+body .public-results .feed .item-title:hover { color:var(--blue); text-decoration:underline; text-underline-offset:3px; }
+body .public-results .feed .eyebrow { font-size:.6875rem; color:var(--muted); }
+.notice-card-meta { display:flex; gap:8px; flex-wrap:wrap; margin-top:12px; font-size:.75rem; color:var(--muted); }
+.notice-card-meta>span { background:var(--page); border-radius:5px; padding:5px 8px; }
+.notice-card-meta>.notice-card-deadline { color:#854410; background:#fff4e6; }
+body main#main .public-notice { max-width:1000px; padding:28px; }
+.public-notice-heading { margin-top:18px; padding-bottom:20px; border-bottom:1px solid var(--line); }
+body .public-notice h1 { font-size:clamp(1.6rem,3vw,2.4rem); line-height:1.25; letter-spacing:-.035em; margin:10px 0 14px; max-width:850px; }
+body .public-notice .lead { max-width:780px; font-size:1rem; line-height:1.8; color:var(--muted); }
+body .public-notice .metadata { font-size:.75rem; color:var(--muted); margin-top:16px; }
+body .public-notice .detail-facts { background:transparent; padding:0; gap:12px; margin-block:20px; }
+body .public-notice .detail-jump { padding:12px; background:var(--page); border:1px solid var(--line); border-radius:10px; display:flex; flex-wrap:wrap; gap:8px; }
+body .public-notice .detail-jump a { padding:8px 12px; min-height:44px; display:inline-flex; align-items:center; font-size:.8125rem; background:#fff; border:1px solid var(--line); border-radius:7px; }
+body .public-notice .notice-sections { margin:20px 0; }
+body .public-notice .notice-sections>section { scroll-margin-top:24px; }
+body .public-notice .body-text { font-size:.9375rem; line-height:1.85; }
+body .public-notice .full-notice { margin:20px 0; }
+body main#main .information-page { max-width:900px; margin-inline:auto; }
+body .information-page>h1 { font-size:clamp(1.5rem,3vw,2.25rem); letter-spacing:-.035em; }
+body .information-page .lead { color:var(--muted); font-size:1rem; line-height:1.8; }
+body .information-page>section p { max-width:74ch; line-height:1.85; }
+body main#main .tools-hero { padding:24px; }
+body main#main .tools-hero h1 { margin:10px 0; }
+body .tools-hero .tool-search { margin-top:16px; }
+body main#main .tool-detail-heading { margin:16px 0; }
+body .tool-detail .tool-workspace { gap:16px; }
+@media(max-width:850px) {
+  body main#main .public-listing .page-intro { grid-template-columns:1fr; gap:16px; }
+  .public-listing-layout { grid-template-columns:1fr; gap:16px; }
+  body main#main .public-filter-sidebar .filter-controls { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .source-guidance { display:none; }
+}
+@media(max-width:600px) {
+  body main#main :is(.public-results,.public-notice),body main#main .public-listing .page-intro { padding:16px; }
+  body main#main .public-results .feed article { padding:14px; }
+  body .public-listing .page-intro .search { flex-direction:row; }
+  body .public-listing .search button { width:auto; flex:none; font-size:.75rem; padding-inline:8px; }
+  body .public-results .panel-heading label { width:100%; justify-content:space-between; }
+}
+
+/* Predictable bookmark controls and compact tool discovery. */
+body main#main .save-job { display:inline-flex; align-items:center; justify-content:center; gap:7px; width:auto; min-height:44px; padding:8px 12px; border:1px solid var(--brand-border); border-radius:8px; background:#fff; color:#244d86; font-size:.8125rem; font-weight:600; line-height:1.4; text-decoration:none; white-space:nowrap; vertical-align:middle; }
+body main#main .save-job svg { flex:none; }
+body main#main .save-job:hover { background:var(--soft); border-color:var(--blue); }
+body main#main .save-job.is-saved { background:var(--soft); color:var(--blue); border-color:#a9c5f5; }
+body main#main .save-job:disabled { cursor:wait; opacity:.65; }
+.bookmark-control { display:inline-flex; flex-direction:column; align-items:flex-start; max-width:100%; gap:5px; }
+.bookmark-error { display:block; white-space:normal; font-size:.75rem; line-height:1.5; color:#a42626; }
+body main#main .tools-directory .tools-hero { padding:22px; }
+body main#main .tools-directory .tools-hero h1 { font-size:clamp(1.5rem,2.5vw,2rem); margin:8px 0; }
+body .tools-directory .tool-search { width:100%; max-width:580px; }
+body .tools-directory .tool-tabs { gap:6px; }
+body .tools-directory .tool-tabs button { padding:8px 12px; }
+body .tools-directory .tool-count { color:var(--muted); font-size:.8125rem; margin:14px 0; }
+body main#main .tool-grid { grid-template-columns:repeat(3,minmax(0,1fr)); align-items:stretch; }
+body main#main .tool-card { display:flex; flex-direction:column; min-width:0; height:100%; }
+body main#main .tool-card .tool-open { margin-top:auto; padding-top:14px; }
+body main#main .tool-card p { margin-bottom:18px; }
+body main#main .tool-card-top { gap:8px; flex-wrap:wrap; }
+@media(max-width:900px) { body main#main .tool-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+@media(max-width:600px) { body main#main .tool-grid { grid-template-columns:1fr; } body main#main .tools-directory .tools-hero { padding:16px; } }
+
+/* A compact sort menu keeps the results heading easy to scan. */
+body main#main .public-results .results-toolbar { display:flex; align-items:center; justify-content:space-between; gap:12px 20px; padding:0 0 16px; }
+body main#main .public-results .results-toolbar h2 { margin:0; font-size:1rem; line-height:1.5; flex:1 1 200px; }
+body .public-results .results-toolbar .results-sort { display:flex; align-items:center; gap:8px; width:auto; margin:0; flex:0 0 auto; font-weight:400; }
+.results-sort>span { color:var(--muted); font-size:.75rem; white-space:nowrap; }
+body .public-results .results-sort select { width:150px; min-height:44px; padding:8px 28px 8px 10px; margin:0; border:1px solid var(--line); border-radius:7px; background-color:#fff; font-size:.8125rem; color:var(--ink); font-weight:500; }
+@media(max-width:600px) { body .public-results .results-toolbar .results-sort { width:100%; justify-content:space-between; } }

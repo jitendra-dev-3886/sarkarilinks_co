@@ -24,9 +24,9 @@ class WorkspaceTest extends TestCase
     public function test_tool_manager_can_configure_tools_but_operations_cannot(): void
     {
         $this->actingAs($this->user('tool-manager'));
-        $this->getJson('/api/v1/admin/tools')->assertOk()->assertJsonCount(10, 'data');
+        $this->getJson('/api/v1/admin/tools')->assertOk()->assertJsonCount(12, 'data');
         $this->putJson('/api/v1/admin/tools/age', ['name' => 'Age calculator', 'help' => 'Read the official cut-off date.', 'enabled' => false])->assertOk();
-        $this->getJson('/api/v1/tools')->assertJsonCount(9, 'data');
+        $this->getJson('/api/v1/tools')->assertJsonCount(11, 'data');
         $this->getJson('/api/v1/admin/operations')->assertForbidden();
         $this->assertDatabaseHas('audit_logs', ['action' => 'tool.updated']);
         $this->actingAs($this->user('operations'));

@@ -1,39 +1,5 @@
 /* One reading system across all designs. Fonts are local, with Devanagari fallbacks. */
-:root, [data-theme] {
-  --blue: #155eef;
-  --teal: #086c70;
-  --ink: #172b45;
-  --muted: #4c5d72;
-  --line: #d4deea;
-  --page: #f6f8fc;
-  --soft: #edf3ff;
-  --soft-alt: #eaf7f4;
-  --hover: #1149bc;
-  --heading-font: system-ui, -apple-system, "Segoe UI", "Nirmala UI", Arial, sans-serif;
-  --body-font: system-ui, -apple-system, "Segoe UI", "Nirmala UI", Arial, sans-serif;
-  --card-radius: 16px;
-}
-[data-theme="forest"] {
-  --blue: #087354; --teal: #08644e; --ink: #173a32; --muted: #435e55;
-  --page: #f3f8f4; --soft: #e7f3e9; --soft-alt: #f1f5e7;
-  --hover: #07553f; --line: #cfdfd5; --card-radius: 22px;
-}
-[data-theme="studio"] {
-  --blue: #5c3dc4; --teal: #623797; --ink: #2c2448; --muted: #5b526e;
-  --page: #f8f7fc; --soft: #f0eafb; --soft-alt: #eaf1fe;
-  --hover: #442b99; --line: #dcd5ed; --card-radius: 18px;
-}
-[data-theme="editorial"] {
-  --blue: #98451f; --teal: #7e411f; --ink: #352d27; --muted: #65564a;
-  --page: #faf7f1; --soft: #f6ecdf; --soft-alt: #f3efe6;
-  --hover: #713318; --line: #e0d7c9; --card-radius: 8px;
-  --heading-font: Georgia, "Times New Roman", "Nirmala UI", serif;
-}
-[data-theme="focus"] {
-  --blue: #173b61; --teal: #254666; --ink: #102b45; --muted: #405469;
-  --page: #f4f6f8; --soft: #e9eef3; --soft-alt: #f0f3f6;
-  --hover: #102c48; --line: #b8c5d1; --card-radius: 8px;
-}
+/* Palette and heading-font definitions live in features/appearance/theme.css. */
 html { font-size: 100%; scroll-padding-top: 110px; }
 html[data-text-size="large"] { font-size: 112.5%; }
 body { color: var(--ink); background: var(--page); font-family: var(--body-font); font-size: 1rem; line-height: 1.65; }
@@ -449,12 +415,12 @@ html[data-theme] .essential-home:not(.task-home) .saas-hero { grid-template-colu
 .resume-paper { font-family: "Segoe UI", "Nirmala UI", Arial, sans-serif; }
 .resume-paper :is(h1,h2,p) { font-family: inherit; }
 .resume-paper h1 { color: #163760; }
-.resume-paper h2 { color: #155eef; }
+.resume-paper h2 { color: var(--blue); }
 .resume-paper section p { font-size: .875rem; color: #3f5065; }
 .resume-contact { font-size: .75rem; }
 .resume-classic, .resume-classic :is(h1,h2,p) { font-family: Georgia,"Nirmala UI",serif; }
 .resume-classic h1, .resume-classic h2, .resume-minimal h1, .resume-minimal h2 { color: #27374a; }
-.resume-paper header { border-color: #155eef; }
+.resume-paper header { border-color: var(--blue); }
 .resume-classic header, .resume-minimal header { border-color: #27374a; }
 @media print {
   .appearance-preview-banner { display: none; }
@@ -466,17 +432,6 @@ html[data-theme] .essential-home:not(.task-home) .saas-hero { grid-template-colu
 
 /* The homepage palette is shared by every route. */
 :root, [data-theme] { --border: var(--line); --accent: var(--blue); }
-body :is(.page-intro,.tools-hero,.tool-detail-heading,.auth-story,.dashboard-welcome,.admin-heading) {
-  background: linear-gradient(115deg,var(--home-night),var(--home-night-end));
-  color: #fff; border: 1px solid var(--line); border-radius: var(--card-radius);
-  padding: 28px; margin-bottom: 24px;
-}
-body :is(.page-intro,.tools-hero,.tool-detail-heading,.auth-story,.dashboard-welcome,.admin-heading) :is(h1,h2) { color: #fff; }
-body :is(.page-intro,.tools-hero,.tool-detail-heading,.auth-story,.dashboard-welcome,.admin-heading) :is(p,li,.privacy-pills) { color: var(--home-light-text); }
-body :is(.page-intro,.tools-hero,.tool-detail-heading,.auth-story,.dashboard-welcome,.admin-heading) :is(em,.eyebrow) { color: var(--home-bright); }
-body .auth-story > a { color: var(--home-bright); }
-body :is(.page-intro,.tools-hero,.tool-detail-heading,.auth-story,.dashboard-welcome,.admin-heading) .saas-badge { background: var(--home-night); color: var(--home-bright); border-color: var(--home-bright); }
-body :is(.page-intro,.tools-hero,.tool-detail-heading,.auth-story,.dashboard-welcome,.admin-heading) :is(a,button):focus-visible { outline-color: var(--home-bright); }
 body .tool-card .tool-icon, body :is(.tool-icon,.role-badge,.filter-chip) { background: var(--soft); color: var(--blue); }
 body :is(.tools-bottom,.tool-how,.detail-facts > div,.audit-diff pre) { background: var(--soft); border-color: var(--line); }
 body :is(.detail,.information-page,.login-panel) { border-top: 4px solid var(--blue); }
@@ -485,11 +440,5 @@ body :is(.login-panel input,.content-editor input,.content-editor select,.conten
 body :is(.login-panel p,.admin-panel > p,.audit-row summary small) { color: var(--muted); }
 body :is(input,select,textarea):focus { outline-color: var(--blue); }
 @media(max-width: 600px) {
-  body :is(.page-intro,.tools-hero,.tool-detail-heading,.auth-story,.dashboard-welcome,.admin-heading) { padding: 20px 16px; }
   body :is(.dashboard-welcome,.admin-heading) { flex-wrap: wrap; }
 }
-:root, [data-theme] { --home-night: #101f3b; --home-night-end: #123a43; --home-bright: #81f0d3; --home-light-text: #d9e5f5; }
-[data-theme="forest"] { --home-night: #102f29; --home-night-end: #17483a; --home-bright: #a2efbd; }
-[data-theme="studio"] { --home-night: #211a42; --home-night-end: #383068; --home-bright: #d6c3ff; }
-[data-theme="editorial"] { --home-night: #33251f; --home-night-end: #57392b; --home-bright: #ffd4a5; }
-[data-theme="focus"] { --home-night: #11243b; --home-night-end: #20374d; --home-bright: #e0eab0; }

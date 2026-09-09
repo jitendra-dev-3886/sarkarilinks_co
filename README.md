@@ -1,6 +1,6 @@
 # SarkariLinks
 
-Staff guides: [Simple workflow](docs/quick-workflow.md) · [Administrator manual](docs/admin-user-manual.md) · [Release notes — 6 September 2026](docs/release-notes-2026-09-06.md).
+Staff guides: [Simple workflow](docs/quick-workflow.md) · [Administrator manual](docs/admin-user-manual.md) · [Backend technical guide](docs/backend-technical-guide.md) · [EC2 deployment guide](docs/ec2-deployment-guide.md) · [Release notes — 6 September 2026](docs/release-notes-2026-09-06.md).
 
 React + TypeScript public portal and Laravel 13 API, based on `SarkariLinks_Technical_SRS_React_Laravel_Docker.docx`.
 

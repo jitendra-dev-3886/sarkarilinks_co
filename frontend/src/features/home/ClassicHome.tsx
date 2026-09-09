@@ -1,3 +1,6 @@
+import { CategoryIcon, NewNotice } from '../../components/NoticeVisuals';
+import Deadline from '../../components/Deadline';
+import ChoiceSwitch from '../../components/ChoiceSwitch';
 import { useState } from 'react';
 import { useQueries } from '@tanstack/react-query';
 import { Link, useNavigate } from 'react-router-dom';
@@ -9,12 +12,12 @@ import HomeHighlights from './HomeHighlights';
 import './classic.css';
 
 const sections = [
-  ['jobs', 'Latest jobs'], ['results', 'Results'], ['admit-cards', 'Admit cards'],
+  ['results', 'Results'], ['admit-cards', 'Admit cards'], ['jobs', 'Latest jobs'],
   ['admissions', 'Admissions'], ['answer-keys', 'Answer keys'], ['syllabus', 'Syllabus'],
   ['certificate-verification', 'Certificate verification'],
 ] as const;
 
-export default function ClassicHome({ tools, quickStart = false }: { tools: PortalTool[]; quickStart?: boolean }) {
+export default function ClassicHome({ tools }: { tools: PortalTool[] }) {
   const navigate = useNavigate(), session = useMemberSession();
   const [locale, setLocale] = useState('en'), [closing, setClosing] = useState(false);
   const queries = useQueries({ queries: sections.map(([type]) => ({
@@ -23,30 +26,20 @@ export default function ClassicHome({ tools, quickStart = false }: { tools: Port
     staleTime: 60_000,
   })) });
   const refreshing = queries.some(query => query.isFetching);
-  return <div className="classic-home">
+  return <div className="classic-home compact-cards">
     {session.data?.data?.roles.includes('administrator') && session.data.data.permissions.includes('settings.manage') && <div className="home-admin-actions"><Link to="/admin?tab=appearance">Customize homepage</Link></div>}
-    {quickStart ? <section className="classic-quick-start" aria-labelledby="quick-start-title">
-      <div className="quick-start-copy"><span className="eyebrow">YOUR NEXT STEP</span><h1 id="quick-start-title">What would you like to do today?</h1><p>Choose a task and get straight to the information you need.</p><Link to="/search">Search all notices &rarr;</Link><small>Independent portal. Verify details with the issuing authority.</small></div>
-      <nav className="quick-start-actions" aria-label="Start a task">{[
-        ['/jobs', '01', 'Find a job', 'Explore recent opportunities'],
-        ['/results', '02', 'Check a result', 'Find published exam results'],
-        ['/admit-cards', '03', 'Get an admit card', 'Open exam-day notices'],
-        ['/account?tab=saved', '04', 'Open my shortlist', 'Return to your saved jobs'],
-      ].map(([path, number, title, detail]) => <Link key={path} to={path}><span aria-hidden="true">{number}</span><strong>{title}</strong><small>{detail}</small><b aria-hidden="true">&rarr;</b></Link>)}</nav>
-    </section> : <section className="classic-masthead">
-      <span className="eyebrow">JOBS &amp; EXAM UPDATE DESK</span>
-      <h1>One place for your next update.</h1>
-      <p>Latest jobs, results, admit cards and application resources.</p>
+    <section className="classic-masthead notice-desk" aria-labelledby="notice-desk-title">
+      <div className="notice-desk-heading"><span className="eyebrow">THE NOTICE DESK</span><h1 id="notice-desk-title">Government Jobs, Results &amp; Admit Cards</h1><p>Find your next opportunity. Stay ready for your next exam.</p></div>
       <form role="search" className="classic-search" onSubmit={event => { event.preventDefault(); navigate(`/search?q=${encodeURIComponent(String(new FormData(event.currentTarget).get('q') ?? '').trim())}`); }}>
         <label className="sr-only" htmlFor="classic-search">Search jobs and updates</label>
-        <input id="classic-search" name="q" maxLength={150} placeholder="Search an exam, job or organization" /><button>Search notices</button>
+        <input id="classic-search" name="q" maxLength={150} placeholder="Search jobs, exams, results..." /><button aria-label="Search notices"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" /><path d="m16 16 5 5" /></svg></button>
       </form>
-      <p className="classic-source">Independent portal. Check the official source linked on each notice.</p>
-    </section>}
-    <nav className="classic-shortcuts" aria-label="Notice categories">{sections.map(([type, title]) => <Link key={type} to={`/${type}?locale=${locale}`}>{title}</Link>)}<Link to="/tools">Tools &amp; AI</Link></nav>
+    </section>
+    <nav className="classic-shortcuts" aria-label="Notice categories">{sections.map(([type, title]) => <Link key={type} to={`/${type}?locale=${locale}`}><CategoryIcon category={type} /><span>{title}</span><span aria-hidden="true">&#8599;</span></Link>)}<Link to="/tools"><CategoryIcon category="tools" /><span>Application tools</span><span aria-hidden="true">&#8599;</span></Link></nav>
     <HomeHighlights locale={locale} />
-    <ReturnVisit tools={tools} />
-    <div className="classic-controls"><label>Notice language<select value={locale} onChange={event => setLocale(event.target.value)}><option value="en">English</option><option value="hi">Hindi</option></select></label><button className="secondary" disabled={refreshing} onClick={() => queries.forEach(query => void query.refetch())}>{refreshing ? 'Checking updates...' : 'Refresh notices'}</button><Link to="/account?tab=saved">My saved jobs</Link></div>
+
+    <nav className="government-organizations" aria-label="Browse organizations"><strong>Browse by exam</strong>{['UPSC', 'SSC', 'Railway RRB', 'IBPS', 'UPSSSC', 'BPSC'].map(name => <Link key={name} to={`/search?q=${encodeURIComponent(name)}`}>{name}</Link>)}</nav>
+    <div className="classic-controls"><div className="home-language"><span aria-hidden="true">Notice language</span><ChoiceSwitch label="Notice language" value={locale} onChange={value => setLocale(value)} options={[["en", "English"], ["hi", "Hindi"]]} /></div><button className="secondary" disabled={refreshing} onClick={() => queries.forEach(query => void query.refetch())}>{refreshing ? 'Checking updates...' : 'Refresh notices'}</button><Link to="/account?tab=saved">My saved jobs</Link></div>
     <div className="classic-columns">{sections.map(([type, title], index) => {
       const query = queries[index];
       return <section className="classic-column" key={type} aria-labelledby={`classic-${type}`}>
@@ -55,9 +48,10 @@ export default function ClassicHome({ tools, quickStart = false }: { tools: Port
         {query.isPending && <p role="status">Loading {title.toLowerCase()}...</p>}
         {query.error && <p role="alert">Could not load notices. <button className="text-button" onClick={() => void query.refetch()}>Try again</button></p>}
         {query.data?.data.length === 0 && <p>{type === 'jobs' && closing ? 'No upcoming deadlines right now.' : `No published ${title.toLowerCase()} in ${locale === 'hi' ? 'Hindi' : 'English'} yet.`}</p>}
-        <ul>{query.data?.data.map(item => <li key={item.id}><Link lang={item.locale} to={`/${item.type}/${item.slug}?locale=${item.locale}`}>{item.title}</Link><small>{item.organization} &middot; {new Date(item.published_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', timeZone: 'Asia/Kolkata' })}</small>{type === 'jobs' && <BookmarkButton content={item} />}</li>)}</ul>
+        <ul>{query.data?.data.map(item => <li key={item.id}><NewNotice published={item.published_at} /><Link lang={item.locale} to={`/${item.type}/${item.slug}?locale=${item.locale}`}>{item.title}</Link><small>{item.organization} &middot; {new Date(item.published_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', timeZone: 'Asia/Kolkata' })}</small>{type === 'jobs' && item.closing_date && <Deadline value={item.closing_date} />}{type === 'jobs' && <BookmarkButton content={item} />}</li>)}</ul>
         <Link className="classic-view-all" to={`/${type}?locale=${locale}`}>View all {title.toLowerCase()} &rarr;</Link>
       </section>;
-    })}<section className="classic-column"><h2><Link to="/tools">Application tools</Link></h2><ul>{tools.filter(tool => ['resume-builder', 'image-compressor', 'image-converter', 'image-to-text', 'image-to-pdf', 'age'].includes(tool.slug)).map(tool => <li key={tool.slug}><Link to={`/tools/${tool.slug}`}>{tool.name}</Link></li>)}</ul><Link className="classic-view-all" to="/tools">View all tools &rarr;</Link></section><section className="classic-column"><h2>Browse organizations</h2><ul>{['UPSC', 'SSC', 'IBPS', 'Railway RRB', 'UPSSSC', 'BPSC'].map(name => <li key={name}><Link to={`/search?q=${encodeURIComponent(name)}`}>{name}</Link></li>)}</ul><Link className="classic-view-all" to="/sitemap">All sections &rarr;</Link></section></div>
+    })}<section className="classic-column"><h2><Link to="/tools">Application tools</Link></h2><ul>{tools.filter(tool => ['resume-builder', 'image-compressor', 'image-converter', 'image-to-text', 'image-to-pdf', 'pdf-compressor', 'pdf-merge-split', 'age'].includes(tool.slug)).map(tool => <li key={tool.slug}><Link to={`/tools/${tool.slug}`}>{tool.name}</Link></li>)}</ul><Link className="classic-view-all" to="/tools">View all tools &rarr;</Link></section><section className="classic-column"><h2>Browse organizations</h2><ul>{['UPSC', 'SSC', 'IBPS', 'Railway RRB', 'UPSSSC', 'BPSC'].map(name => <li key={name}><Link to={`/search?q=${encodeURIComponent(name)}`}>{name}</Link></li>)}</ul><Link className="classic-view-all" to="/sitemap">All sections &rarr;</Link></section></div>
+    <ReturnVisit tools={tools} />
   </div>;
 }

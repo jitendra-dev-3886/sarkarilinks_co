@@ -10,10 +10,10 @@ test('administrator edits public information; footer categories and organization
   await page.getByLabel('Public support email').fill('support@example.test');
   await page.getByLabel('Public address (optional)').fill('Synthetic test address');
   await page.getByLabel('Page title', { exact: true }).fill('About our test portal');
-  await page.getByLabel('Page to edit').selectOption('faq');
+  await page.getByRole('navigation', { name: 'Page to edit' }).getByRole('button', { name: /^FAQ/ }).click();
   await page.getByRole('button', { name: 'Save site information', exact: true }).click();
   await expect(page.getByText('Site information saved and audited.')).toBeVisible();
-  await expect(page.getByLabel('Page to edit')).toHaveValue('faq');
+  await expect(page.getByRole('navigation', { name: 'Page to edit' }).getByRole('button', { name: /^FAQ/ })).toHaveAttribute('aria-pressed', 'true');
   await page.reload();
   await page.getByRole('button', { name: 'Site information', exact: true }).click();
   await expect(page.getByLabel('Site operator / business name')).toHaveValue('Synthetic Portal Owner');

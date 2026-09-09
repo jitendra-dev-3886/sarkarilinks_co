@@ -52,7 +52,7 @@ test('homepage fits desktop and mobile without horizontal overflow', async ({ pa
   for (const width of [1536, 390]) {
     await page.setViewportSize({ width, height: 1024 });
     await page.goto('/');
-    await expect(page.getByRole('heading', { name: 'Find your opportunity. Make your next move.' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Government Jobs, Results & Admit Cards' })).toBeVisible();
     await expect(page.getByText('Loading latest updates…')).toHaveCount(0);
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
     await page.screenshot({ path: `test-results/home-${width}.png`, fullPage: true });

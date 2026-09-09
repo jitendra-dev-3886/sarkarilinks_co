@@ -19,6 +19,14 @@ export default function Seo() {
     canonical.href = `${window.location.origin}${location.pathname}${new URLSearchParams(location.search).get('locale') === 'hi' ? '?locale=hi' : ''}`;
     let robots = document.querySelector<HTMLMetaElement>('meta[name="robots"]'); if (!robots) { robots = document.createElement('meta'); robots.name = 'robots'; document.head.append(robots); }
     robots.content = information.data?.data.review_required || information.error || detail.error || /^\/(account|admin|login|search)(\/|$)/.test(location.pathname) ? 'noindex,follow' : 'index,follow';
+    for (const [key, value] of Object.entries({ 'og:title': document.title, 'og:description': description?.getAttribute('content') ?? '', 'og:url': canonical.href, 'og:type': 'website', 'twitter:card': 'summary', 'twitter:title': document.title, 'twitter:description': description?.getAttribute('content') ?? '' })) {
+      const attribute = key.startsWith('og:') ? 'property' : 'name';
+      let meta = document.querySelector<HTMLMetaElement>(`meta[${attribute}="${key}"]`);
+      if (!meta) { meta = document.createElement('meta'); meta.setAttribute(attribute, key); document.head.append(meta); }
+      meta.content = value;
+    }
+    // Server breadcrumbs describe the initial URL; discard them after client navigation.
+    document.querySelectorAll('script[data-route-schema]').forEach(node => node.remove());
     document.documentElement.lang = new URLSearchParams(location.search).get('locale') === 'hi' ? 'hi' : 'en';
   }, [location.pathname, location.search, detail.data, detail.error, information.data, information.error]);
   useEffect(() => { window.scrollTo({ top: 0, behavior: 'instant' }); }, [location.pathname]);

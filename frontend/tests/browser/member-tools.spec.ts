@@ -31,7 +31,7 @@ test('member registration, saved jobs and private resume survive signing out and
   await page.getByLabel('Full name').fill('Sample Updated');
   await page.getByLabel('headline', { exact: true }).fill('Software engineer');
   await page.getByLabel('experience', { exact: true }).fill('Built accessible tools for applicants.');
-  await page.getByRole('combobox', { name: 'Template', exact: true }).selectOption('classic');
+  await page.getByRole('radio', { name: 'Classic', exact: true }).check();
   await page.getByRole('button', { name: 'Save to my account' }).click();
   await expect(page.getByText('Résumé saved to your account.', { exact: true })).toBeVisible();
   await page.reload();
@@ -58,7 +58,7 @@ test('image conversion and PDF export produce actual downloadable files without 
   page.on('request', request => { if (request.method() === 'POST' || request.method() === 'PUT') uploads.push(request.url()); });
   await page.goto('/tools/image-converter');
   await page.getByLabel('Choose file').setInputFiles(resolve('..', '.cache/extraction-tests/recruitment.png'));
-  await page.getByLabel('Output format').selectOption('image/webp');
+  await page.getByRole('group', { name: 'Output format', exact: true }).getByRole('radio', { name: 'WebP', exact: true }).check();
   await page.getByLabel('Maximum width').fill('600');
   await page.getByRole('button', { name: 'Convert image' }).click();
   await expect(page.getByRole('heading', { name: 'Your file is ready' })).toBeVisible();
@@ -96,7 +96,7 @@ test('OCR reads a real image and native PDF locally and tool directory is usable
   await expect(page.locator('.tools-directory .tool-card')).toHaveCount(1);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   await page.getByRole('button', { name: 'Menu', exact: true }).click();
-  await expect(page.getByRole('navigation', { name: 'Main navigation' }).getByRole('link', { name: 'Latest jobs' })).toBeVisible();
+  await expect(page.getByRole('navigation', { name: 'Main navigation' }).getByRole('link', { name: 'Latest jobs', exact: true })).toBeVisible();
   await page.screenshot({ path: 'test-results/tools-mobile.png', fullPage: true });
 });
 

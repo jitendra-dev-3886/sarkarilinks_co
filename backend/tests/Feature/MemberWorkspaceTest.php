@@ -85,9 +85,9 @@ class MemberWorkspaceTest extends TestCase
     {
         $first = User::factory()->create(['password' => 'OriginalPassword123!']);
         $second = User::factory()->create();
-        $document = ['template' => 'modern', 'name' => 'Private name', 'experience' => 'Private employment history'];
+        $document = ['template' => 'modern', 'name' => 'Private name', 'experience' => 'Private employment history', 'projects' => 'Accessible application portal', 'certifications' => 'Professional certificate', 'achievements' => 'Reduced processing time'];
         $this->actingAs($first)->putJson('/api/v1/account/resume', ['document' => $document])->assertOk();
-        $this->getJson('/api/v1/account/resume')->assertJsonPath('data.experience', $document['experience']);
+        $this->getJson('/api/v1/account/resume')->assertJsonPath('data.experience', $document['experience'])->assertJsonPath('data.projects', $document['projects'])->assertJsonPath('data.certifications', $document['certifications'])->assertJsonPath('data.achievements', $document['achievements']);
         $this->actingAs($second)->getJson('/api/v1/account/resume')->assertJsonPath('data', null);
         $this->deleteJson('/api/v1/account/resume')->assertNoContent();
         $this->assertDatabaseCount('member_resumes', 1);
