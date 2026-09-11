@@ -1,6 +1,47 @@
-body main#main .deadline-badge { display:inline-flex; flex-wrap:wrap; align-items:center; width:fit-content; gap:3px; padding:5px 8px; margin-top:5px; border:1px solid #d6e1ee; border-radius:6px; background:#f1f5fa; color:#40536b; font-size:11px; font-weight:600; line-height:1.5; }
-body main#main .deadline-urgent { background:#fff1f2; color:#b42332; border-color:#fecdd3; }
-body main#main .deadline-closed { background:#f1f2f4; color:#596273; border-color:#dce0e5; }
-body main#main .deadline-badge>span { padding:0; margin:0; background:transparent; color:inherit; font-size:inherit; font-weight:inherit; }
-body main#main .ticker-links .deadline-badge { margin:0 0 0 8px; flex-wrap:nowrap; white-space:nowrap; }
-body main#main .hot-job-links .deadline-badge { margin-top:8px; }
+body main#main .deadline-badge {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    width: fit-content;
+    gap: 3px;
+    padding: 5px 8px;
+    margin-top: 5px;
+    border: 1px solid #d6e1ee;
+    border-radius: 6px;
+    background: #f1f5fa;
+    color: #40536b;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1.5;
+}
+
+body main#main .deadline-urgent {
+    background: var(--urgent-soft);
+    color: var(--urgent);
+    border-color: #f3b8c0;
+}
+
+body main#main .deadline-closed {
+    background: #f1f2f4;
+    color: #596273;
+    border-color: #dce0e5;
+}
+
+body main#main .deadline-badge>span {
+    padding: 0;
+    margin: 0;
+    background: transparent;
+    color: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+}
+
+body main#main .ticker-links .deadline-badge {
+    margin: 0 0 0 8px;
+    flex-wrap: nowrap;
+    white-space: nowrap;
+}
+
+body main#main .hot-job-links .deadline-badge {
+    margin-top: 8px;
+}

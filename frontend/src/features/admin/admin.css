@@ -1,46 +1,352 @@
-.login-panel { max-width: 460px; margin: 50px auto; padding: 32px; }
-.login-panel h1 { font-size: 30px; }
-.login-panel p, .admin-panel > p { color: #63738e; font-size: 14px; }
-.login-panel form { display: grid; gap: 18px; margin: 25px 0; }
-.login-panel label, .content-editor label, .action-review label { display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 600; }
-.login-panel input, .content-editor input, .content-editor textarea, .content-editor select, .action-review input, .action-review textarea { width: 100%; padding: 11px; border: 1px solid #cad6e8; border-radius: 6px; background: #fff; color: #1d304e; font: inherit; }
-.admin-workspace { padding: 24px 0; }
-.admin-heading, .admin-toolbar { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 20px; }
-.admin-heading h1 { font-size: 32px; }
-.role-badge, .status-badge { display: inline-block; font-size: 11px; border-radius: 5px; padding: 4px 9px; background: #eaf0fb; color: #335787; }
-.role-badge { margin-left: 10px; }
-.status-published { background: #e1f5e9; color: #17623a; }.status-in_review { background: #fff0cd; color: #795200; }.status-archived { background: #edf0f4; color: #626c7d; }
-.admin-tabs { display: flex !important; flex-direction: row !important; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
-.admin-tabs button { background: #e8eef8; color: #3e577a; }
-.admin-tabs button.selected { background: #245bd5; color: white; }
-.admin-panel, .admin-gate { padding: 25px; }
-.admin-error { padding: 12px; border-radius: 6px; background: #fff0f0; color: #a12828 !important; font-size: 13px; }
-.admin-success { padding: 12px; background: #e9f8ef; color: #23663a !important; border-radius: 6px; font-size: 13px; }
-.admin-heading-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-.admin-table-wrap { overflow-x: auto; }
-.admin-panel table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; }
-.admin-panel th { color: #60718e; background: #f6f8fc; font-weight: 600; }
-.admin-panel td, .admin-panel th { padding: 14px 12px; border-bottom: 1px solid #e8edf5; }
-.admin-panel td small, .user-role-form small { display: block; color: #6d7f98; font-size: 11px; }
-.record-title { text-align: left; background: transparent; color: #214e9b; padding: 4px 0; min-height: 36px; }
-.row-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
-.row-actions button { font-size: 12px; text-transform: capitalize; padding: 8px 12px; }
-.content-editor, .action-review { margin: 20px 0; padding: 24px; border: 1px solid #cedcf3; border-radius: 9px; background: #f9fbff; }
-.content-editor fieldset { border: 0; padding: 0; margin: 0; }
-.content-editor label { margin-bottom: 15px; }
-.content-editor form > button { display: block; margin-top: 18px; }
-.content-editor fieldset:disabled input, .content-editor fieldset:disabled textarea { background: #f2f5f9; color: #425674; }
-.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 18px; }
-.action-review form { display: grid; gap: 15px; }
-.action-review p { font-size: 13px; }
-.user-role-form { display: grid; grid-template-columns: 1fr 2fr auto; align-items: center; gap: 20px; padding: 20px 0; border-bottom: 1px solid #e3eaf5; }
-.role-options { display: flex; flex-wrap: wrap; gap: 12px; }
-.role-options label { font-size: 12px; display: flex; gap: 6px; align-items: center; }
-.permission-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-.permission-grid article { border: 1px solid #dce5f2; padding: 16px; border-radius: 8px; }
-.permission-grid h3 { font-size: 15px; }
-.permission-grid ul { padding-left: 18px; font-size: 12px; color: #526884; }
-.audit-row { padding: 16px 0; border-bottom: 1px solid #e1e8f2; font-size: 13px; }
-.audit-row summary { cursor: pointer; }.audit-row summary small { float: right; color: #70819a; }
-.audit-diff { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }.audit-diff > div { min-width: 0; }.audit-diff pre { white-space: pre-wrap; overflow-wrap: anywhere; font-size: 11px; padding: 15px; background: #f1f5fb; }
-@media(max-width: 750px) { .admin-heading { align-items: start; }.admin-heading h1 { font-size: 25px; }.admin-panel { padding: 15px; }.form-grid, .permission-grid, .user-role-form, .audit-diff { grid-template-columns: 1fr; }.login-panel { margin: 25px auto; padding: 24px; }.admin-panel td, .admin-panel th { padding: 10px; min-width: 110px; }.admin-tabs button { font-size: 12px; }.audit-row summary small { float: none; display: block; } }
+.login-panel {
+    max-width: 460px;
+    margin: 50px auto;
+    padding: 32px;
+}
+
+.login-panel h1 {
+    font-size: 30px;
+}
+
+.login-panel p,
+.admin-panel>p {
+    color: #63738e;
+    font-size: 14px;
+}
+
+.login-panel form {
+    display: grid;
+    gap: 18px;
+    margin: 25px 0;
+}
+
+.login-panel label,
+.content-editor label,
+.action-review label {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.login-panel input,
+.content-editor input,
+.content-editor textarea,
+.content-editor select,
+.action-review input,
+.action-review textarea {
+    width: 100%;
+    padding: 11px;
+    border: 1px solid #cad6e8;
+    border-radius: 6px;
+    background: #fff;
+    color: #1d304e;
+    font: inherit;
+}
+
+.admin-workspace {
+    padding: 24px 0;
+}
+
+.admin-heading,
+.admin-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.admin-heading h1 {
+    font-size: 32px;
+}
+
+.role-badge,
+.status-badge {
+    display: inline-block;
+    font-size: 11px;
+    border-radius: 5px;
+    padding: 4px 9px;
+    background: #eaf0fb;
+    color: #335787;
+}
+
+.role-badge {
+    margin-left: 10px;
+}
+
+.status-published {
+    background: var(--success-soft);
+    color: var(--success);
+}
+
+.status-in_review {
+    background: #fff7e0;
+    color: #795200;
+}
+
+.status-archived {
+    background: #f5f7fb;
+    color: var(--muted);
+}
+
+.admin-tabs {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.admin-tabs button {
+    background: #e8eef8;
+    color: #3e577a;
+}
+
+.admin-tabs button.selected {
+    background: #245bd5;
+    color: white;
+}
+
+.admin-panel,
+.admin-gate {
+    padding: 25px;
+}
+
+.admin-error {
+    padding: 12px;
+    border-radius: 6px;
+    background: #fff0f0;
+    color: #a12828 !important;
+    font-size: 13px;
+}
+
+.admin-success {
+    padding: 12px;
+    background: var(--success-soft);
+    color: var(--success) !important;
+    border-radius: 6px;
+    font-size: 13px;
+}
+
+.admin-heading-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.admin-table-wrap {
+    overflow-x: auto;
+}
+
+.admin-panel table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 13px;
+}
+
+.admin-panel th {
+    color: #60718e;
+    background: #f6f8fc;
+    font-weight: 600;
+}
+
+.admin-panel td,
+.admin-panel th {
+    padding: 14px 12px;
+    border-bottom: 1px solid #e8edf5;
+}
+
+.admin-panel td small,
+.user-role-form small {
+    display: block;
+    color: #6d7f98;
+    font-size: 11px;
+}
+
+.record-title {
+    text-align: left;
+    background: transparent;
+    color: #214e9b;
+    padding: 4px 0;
+    min-height: 36px;
+}
+
+.row-actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.row-actions button {
+    font-size: 12px;
+    text-transform: capitalize;
+    padding: 8px 12px;
+}
+
+.content-editor,
+.action-review {
+    margin: 20px 0;
+    padding: 24px;
+    border: 1px solid #cedcf3;
+    border-radius: 9px;
+    background: #f9fbff;
+}
+
+.content-editor fieldset {
+    border: 0;
+    padding: 0;
+    margin: 0;
+}
+
+.content-editor label {
+    margin-bottom: 15px;
+}
+
+.content-editor form>button {
+    display: block;
+    margin-top: 18px;
+}
+
+.content-editor fieldset:disabled input,
+.content-editor fieldset:disabled textarea {
+    background: #f2f5f9;
+    color: #425674;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 18px;
+}
+
+.action-review form {
+    display: grid;
+    gap: 15px;
+}
+
+.action-review p {
+    font-size: 13px;
+}
+
+.user-role-form {
+    display: grid;
+    grid-template-columns: 1fr 2fr auto;
+    align-items: center;
+    gap: 20px;
+    padding: 20px 0;
+    border-bottom: 1px solid #e3eaf5;
+}
+
+.role-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.role-options label {
+    font-size: 12px;
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+.permission-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+}
+
+.permission-grid article {
+    border: 1px solid #dce5f2;
+    padding: 16px;
+    border-radius: 8px;
+}
+
+.permission-grid h3 {
+    font-size: 15px;
+}
+
+.permission-grid ul {
+    padding-left: 18px;
+    font-size: 12px;
+    color: #526884;
+}
+
+.audit-row {
+    padding: 16px 0;
+    border-bottom: 1px solid #e1e8f2;
+    font-size: 13px;
+}
+
+.audit-row summary {
+    cursor: pointer;
+}
+
+.audit-row summary small {
+    float: right;
+    color: #70819a;
+}
+
+.audit-diff {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.audit-diff>div {
+    min-width: 0;
+}
+
+.audit-diff pre {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    font-size: 11px;
+    padding: 15px;
+    background: #f1f5fb;
+}
+
+@media(max-width: 750px) {
+    .admin-heading {
+        align-items: start;
+    }
+
+    .admin-heading h1 {
+        font-size: 25px;
+    }
+
+    .admin-panel {
+        padding: 15px;
+    }
+
+    .form-grid,
+    .permission-grid,
+    .user-role-form,
+    .audit-diff {
+        grid-template-columns: 1fr;
+    }
+
+    .login-panel {
+        margin: 25px auto;
+        padding: 24px;
+    }
+
+    .admin-panel td,
+    .admin-panel th {
+        padding: 10px;
+        min-width: 110px;
+    }
+
+    .admin-tabs button {
+        font-size: 12px;
+    }
+
+    .audit-row summary small {
+        float: none;
+        display: block;
+    }
+}
